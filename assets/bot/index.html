@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bot Poético</title>
+    <link rel="stylesheet" href="bot.css" />
+  </head>
+  <body>
+    <div class="bot">
+      <h1>bot.exe</h1>
+      <p class="bot__intro">Haz una pregunta y responde en verso.</p>
+      <form class="bot__form" id="bot-form">
+        <label for="entrada">mensaje:</label>
+        <input
+          id="entrada"
+          name="entrada"
+          type="text"
+          placeholder="¿Qué glitch sueñas?"
+          autocomplete="off"
+          required
+        />
+        <button type="submit">enviar</button>
+      </form>
+      <div class="bot__output" id="bot-output" aria-live="polite"></div>
+    </div>
+    <script src="bot.js"></script>
+  </body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kittie - Poesía Interactiva</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+  </head>
+  <body>
+    <canvas class="scanline" aria-hidden="true"></canvas>
+    <header class="hero" id="inicio">
+      <div class="hero__content">
+        <p class="hero__tag">poesía + glitch</p>
+        <h1 class="hero__title">Kittie.exe</h1>
+        <p class="hero__subtitle">
+          Un micrositio para recorrer tus poemas entre pixeles y memoria.
+        </p>
+        <nav class="hero__nav">
+          <a href="#poema-principal">Poema Principal</a>
+          <a href="#galeria">Poesía en Imágenes</a>
+          <a href="#poema-digital">Poema Digital</a>
+          <a href="#video-poema">Video Poema</a>
+          <a href="#bot">Bot Poético</a>
+        </nav>
+      </div>
+      <div class="hero__sprite" role="presentation" aria-hidden="true">
+        <div class="sprite sprite--glow"></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel" id="poema-principal">
+        <div class="panel__header">
+          <h2>Poema Principal</h2>
+          <p>Introduce aquí la pieza que guía el viaje retro-poético.</p>
+        </div>
+        <article class="crt">
+          <div class="crt__frame">
+            <div class="crt__content">
+              <p class="crt__line">&gt; pulsa START para sentir</p>
+              <p class="crt__line">me guardo en cartuchos descontinuados,</p>
+              <p class="crt__line">mis glitchs son mapas y constelaciones.</p>
+              <p class="crt__line">repite: soy juego infinito.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel" id="galeria">
+        <div class="panel__header">
+          <h2>Poesía en Imágenes</h2>
+          <p>
+            Sube tus imágenes en la carpeta <code>assets/imagenes</code> y
+            actualiza la galería para mostrar cada poema.
+          </p>
+        </div>
+        <div class="gallery" role="list">
+          <button class="gallery__control gallery__control--prev" aria-label="Poema anterior">
+            ◀
+          </button>
+          <div class="gallery__viewport" role="listbox" aria-live="polite">
+            <figure class="gallery__slide" data-active="true">
+              <img src="assets/imagenes/poema-1.jpg" alt="Poema visual 1" />
+              <figcaption>Poema visual 1</figcaption>
+            </figure>
+            <figure class="gallery__slide">
+              <img src="assets/imagenes/poema-2.jpg" alt="Poema visual 2" />
+              <figcaption>Poema visual 2</figcaption>
+            </figure>
+            <figure class="gallery__slide">
+              <img src="assets/imagenes/poema-3.jpg" alt="Poema visual 3" />
+              <figcaption>Poema visual 3</figcaption>
+            </figure>
+          </div>
+          <button class="gallery__control gallery__control--next" aria-label="Poema siguiente">
+            ▶
+          </button>
+        </div>
+      </section>
+
+      <section class="panel" id="poema-digital">
+        <div class="panel__header">
+          <h2>Poema Digital</h2>
+          <p>
+            Inserta aquí tu poema programado o interactivo. Puedes remplazar el
+            iframe por tu propio HTML o incrustarlo directamente.
+          </p>
+        </div>
+        <div class="embed">
+          <iframe
+            src="assets/poema-digital/index.html"
+            title="Poema digital"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
+
+      <section class="panel" id="video-poema">
+        <div class="panel__header">
+          <h2>Video Poema</h2>
+          <p>
+            Actualiza la URL del video para mostrar tu pieza audiovisual.
+          </p>
+        </div>
+        <div class="embed embed--video">
+          <iframe
+            src="https://player.vimeo.com/video/000000000"
+            title="Video poema"
+            allow="autoplay; fullscreen; picture-in-picture"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
+
+      <section class="panel" id="bot">
+        <div class="panel__header">
+          <h2>Bot Poético</h2>
+          <p>
+            Añade tu bot en HTML o enlázalo directamente. Incluye instrucciones
+            para que la audiencia interactúe.
+          </p>
+        </div>
+        <div class="embed">
+          <iframe
+            src="assets/bot/index.html"
+            title="Bot poético"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© 2024 Kittie · Poesía digital retro.</p>
+      <p>
+        Diseñado con amor por <span class="footer__highlight">tu glitch interior</span>.
+      </p>
+    </footer>
+
+    <script src="scripts/gallery.js"></script>
+  </body>
+</html>
