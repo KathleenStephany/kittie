@@ -1,38 +1,62 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Poema Digital — Kittie.exe</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maíces sonoros — Kittie.exe</title>
 
-  <link rel="stylesheet" href="/kittie/styles/main.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
-</head>
+    <!-- Fuentes y estilos globales -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/kittie/styles/main.css" />
 
-<body>
-  <canvas class="scanline"></canvas>
+    <!-- Librerías p5 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
 
-  <header class="hero">
-    <div class="hero__content">
-      <p class="hero__tag">&gt; poema digital</p>
-      <h1 class="hero__title">Poema digital</h1>
-      <a href="/kittie/index.html" class="a--back">← Volver al inicio</a>
-    </div>
-  </header>
+    <!-- Tu sketch -->
+    <script src="assets/poema-digital/sketch.js"></script>
+  </head>
 
-  <main>
-    <section class="panel">
-      <div class="panel__header">
-        <h2>Poema Digital</h2>
+  <body>
+    <canvas class="scanline" aria-hidden="true"></canvas>
+
+    <!-- ENCABEZADO -->
+    <header class="hero">
+      <div class="hero__content">
+        <p class="hero__tag">&gt; poema digital</p>
+        <h1 class="hero__title">Maíces sonoros</h1>
+        <a href="/kittie/index.html" class="a--back">← Volver al inicio</a>
       </div>
+    </header>
 
-      <div class="embed">
-        <iframe src="assets/poema-digital/index.html"></iframe>
-      </div>
-    </section>
-  </main>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+      <section class="panel">
+        <div class="panel__header">
+          <h2>Poema digital</h2>
+          <p>
+            Sonificación de pesos de ratones bajo diferentes dietas:
+            cada punto es un día, cada curva un tratamiento, cada frecuencia una voz.
+          </p>
+        </div>
 
-</body>
+        <!-- Contenedor donde se dibuja el canvas de p5 -->
+        <div id="poema-digital-container" class="poema-digital"></div>
+      </section>
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="footer">
+      <p>© 2025 Kittie.exe · Poesía KSSS.</p>
+      <p>
+        Espacio interno
+        <span class="footer__highlight">Kathleen Stephany Soto Sigala</span>.
+      </p>
+    </footer>
+  </body>
 </html>

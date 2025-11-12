@@ -320,3 +320,16 @@ main {
   transform: translateY(-4px);
   box-shadow: 0 12px 25px rgba(255, 77, 216, 0.25);
 }
+.poema-digital {
+  position: relative;
+  width: 100%;
+  min-height: min(70vh, 600px);
+  background: #000;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Asegura que el canvas no tenga bordes raros */
+.poema-digital canvas {
+  display: block;
+}
