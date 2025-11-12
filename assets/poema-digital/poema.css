@@ -1,0 +1,91 @@
+:root {
+  --bg: #070312;
+  --fg: #f2f3ff;
+  --accent: #ff4dd8;
+  --secondary: #59ffe5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-family: "VT323", "Courier New", monospace;
+  background: radial-gradient(circle at top, #1a0f2f, #030109 70%);
+  color: var(--fg);
+}
+
+body.invert {
+  filter: invert(1) hue-rotate(180deg);
+  transition: filter 0.6s ease;
+}
+
+.poema {
+  display: grid;
+  gap: 1.5rem;
+  padding: 4rem;
+  text-align: center;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(6, 8, 25, 0.7);
+  box-shadow: 0 40px 80px rgba(3, 1, 15, 0.6);
+}
+
+.poema p {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.poema p.active {
+  color: var(--secondary);
+  text-shadow: 0 0 18px rgba(89, 255, 229, 0.7);
+}
+
+.poema p::after {
+  content: attr(data-glitch);
+  position: absolute;
+  inset: 0;
+  color: var(--accent);
+  mix-blend-mode: lighten;
+  transform: translate(0.1em, -0.1em);
+  animation: glitch 2s infinite;
+}
+
+.poema p::before {
+  content: attr(data-glitch);
+  position: absolute;
+  inset: 0;
+  color: var(--secondary);
+  mix-blend-mode: lighten;
+  transform: translate(-0.1em, 0.1em);
+  animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+  0% {
+    clip-path: inset(0 0 0 0);
+  }
+  20% {
+    clip-path: inset(10% 0 70% 0);
+  }
+  40% {
+    clip-path: inset(40% 0 20% 0);
+  }
+  60% {
+    clip-path: inset(0 0 60% 0);
+  }
+  80% {
+    clip-path: inset(50% 0 10% 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
