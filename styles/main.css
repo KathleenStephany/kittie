@@ -261,7 +261,7 @@ main {
 
 .gallery__slide img {
   max-width: 100%;      /* no pasa del ancho del marco */
-  max-height: 60vh;     /* no pasa del 60% del alto de la ventana */
+  max-height: 10vh;     /* no pasa del 60% del alto de la ventana */
   width: auto;
   height: auto;
   object-fit: contain;  /* NUNCA se recorta, se ve completa */
