@@ -12,14 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/kittie/styles/main.css" />
-
-    <!-- Librerías p5 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
-
-    <!-- Tu sketch -->
-    <script src="assets/poema-digital/sketch.js"></script>
+    <link rel="stylesheet" href="styles/main.css" />
   </head>
 
   <body>
@@ -30,7 +23,7 @@
       <div class="hero__content">
         <p class="hero__tag">&gt; poema digital</p>
         <h1 class="hero__title">Maíces sonoros</h1>
-        <a href="/kittie/index.html" class="a--back">← Volver al inicio</a>
+        <a href="index.html" class="a--back">← Volver al inicio</a>
       </div>
     </header>
 
@@ -38,15 +31,22 @@
     <main>
       <section class="panel">
         <div class="panel__header">
-          <h2>Poema digital</h2>
+          <h2>Poema Digital</h2>
           <p>
-            Sonificación de pesos de ratones bajo diferentes dietas:
-            cada punto es un día, cada curva un tratamiento, cada frecuencia una voz.
+            Sonificación basada en pesos de ratones en diferentes dietas.
+            Cada curva vibra, respira y canta según su propia evolución.
           </p>
         </div>
 
-        <!-- Contenedor donde se dibuja el canvas de p5 -->
-        <div id="poema-digital-container" class="poema-digital"></div>
+        <!-- El poema p5 se incrusta aquí -->
+        <div class="embed embed--video">
+          <iframe
+            src="assets/poema-digital/index.html"
+            title="Poema digital animado"
+            loading="lazy"
+            allow="autoplay"
+          ></iframe>
+        </div>
       </section>
     </main>
 

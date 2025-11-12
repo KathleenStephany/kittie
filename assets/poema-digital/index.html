@@ -1,17 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Poema Digital</title>
-    <link rel="stylesheet" href="poema.css" />
-  </head>
-  <body>
-    <div class="poema">
-      <p data-glitch>en este loop respiro bits</p>
-      <p data-glitch>compilo sentimientos en 8 bits</p>
-      <p data-glitch>press any key to continuar</p>
-    </div>
-    <script src="poema.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>Poema digital — Maíces sonoros</title>
+
+  <!-- Librerías de p5 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+
+  <!-- Tu sketch principal -->
+  <script src="sketch.js"></script>
+
+  <!-- Estilo simple para el poema -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      overflow: hidden;     /* evita barras de scroll */
+      height: 100%;
+      width: 100%;
+    }
+
+    canvas {
+      display: block;        /* el canvas ocupa todo */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- p5.js insertará aquí el canvas automáticamente -->
+</body>
 </html>
