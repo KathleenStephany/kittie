@@ -300,3 +300,23 @@ main {
     border-radius: 12px;
   }
 }
+/* Botón retro para "Volver al inicio" */
+.a--back {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  margin-top: 1.5rem;
+  background: rgba(15, 20, 48, 0.7);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  color: var(--fg);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  font-family: var(--font-main);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.a--back:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(255, 77, 216, 0.25);
+}
