@@ -1,6 +1,5 @@
 let table;
 let osc;
-let canvas;
 
 let colores = {
   "Dp23p": [30, 144, 255],   // azul
@@ -20,21 +19,12 @@ let currentGrupo, currentRows, currentRowIndex;
 let startX, startY, direccion;
 
 function preload() {
-  // Ruta relativa al HTML (poema-digital.html)
-  table = loadTable("assets/poema-digital/sonificacion_data.csv", "csv", "header");
+  // AHORA el CSV está en la MISMA carpeta que este sketch
+  table = loadTable("sonificacion_data.csv", "csv", "header");
 }
 
 function setup() {
-  // buscamos el contenedor del poema
-  const holder = document.getElementById("poema-digital-container");
-  const w = holder ? holder.offsetWidth : windowWidth;
-  const h = holder ? holder.offsetHeight : windowHeight;
-
-  canvas = createCanvas(w, h);
-  if (holder) {
-    canvas.parent("poema-digital-container");
-  }
-
+  createCanvas(windowWidth, windowHeight);
   background(0);
   userStartAudio();
 
@@ -42,16 +32,16 @@ function setup() {
   osc.start();
   osc.amp(0.15);
 
-  maxDia = max(table.getColumn("dia").map(Number));
+  maxDia  = max(table.getColumn("dia").map(Number));
   maxPeso = max(table.getColumn("mean").map(Number));
 
-  // agrupar por dieta
+  // Agrupar filas por dieta
   let dietas = [...new Set(table.getColumn("dieta"))];
   for (let d of dietas) {
     grupos[d] = table.findRows(d, "dieta");
   }
 
-  frameRate(27);
+  frameRate(27); 
   nuevaCurva();
 }
 
@@ -87,10 +77,10 @@ function draw() {
   }
 
   let r = currentRows[currentRowIndex];
-  let dia = r.getNum("dia");
-  let mean = r.getNum("mean");
-  let freq = r.getNum("freq");
-  let c = colores[currentGrupo];
+  let dia   = r.getNum("dia");
+  let mean  = r.getNum("mean");
+  let freq  = r.getNum("freq");
+  let c     = colores[currentGrupo];
 
   osc.freq(freq);
 
@@ -135,14 +125,6 @@ function draw() {
 }
 
 function windowResized() {
-  const holder = document.getElementById("poema-digital-container");
-  if (holder) {
-    const w = holder.offsetWidth;
-    const h = holder.offsetHeight;
-    resizeCanvas(w, h);
-    background(0);
-  } else {
-    resizeCanvas(windowWidth, windowHeight);
-    background(0);
-  }
+  resizeCanvas(windowWidth, windowHeight);
+  background(0);
 }
