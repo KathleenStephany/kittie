@@ -257,7 +257,7 @@ main {
 .gallery__slide img {
   width: 100%;
   height: 100%;
-  object-fit: contain;  /* cámbialo a 'cover' para estilo REEL */
+  object-fit: cover;  /* cámbialo a 'cover' para estilo REEL */
   display: block;
 }
 
