@@ -228,13 +228,37 @@ main {
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.45);
+
+  /* NUEVO: tamaño y centrado del “marco” */
+  width: 100%;
+  max-width: 960px;
+  max-height: 480px;        /* alto máximo de la ventana de galería */
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;         /* fondo negro detrás de la imagen */
 }
 
 .gallery__slide {
   display: none;
   margin: 0;
   text-align: center;
+
+  /* que el slide ocupe todo el marco */
+  width: 100%;
+  height: 100%;
+  display: none;
 }
+
+/* el slide activo se muestra */
+.gallery__slide[data-active="true"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
 
 .gallery__slide[data-active="true"] {
   display: block;
@@ -242,10 +266,12 @@ main {
 
 .gallery__slide img {
   width: 100%;
-  height: clamp(240px, 40vw, 420px);
-  object-fit: cover;
+  height: 100%;          /* ocupa todo el alto del marco */
+  max-height: 100%;
+  object-fit: contain;   /* SE VE COMPLETA dentro del marco */
   display: block;
 }
+
 
 .gallery__slide figcaption {
   padding: 1rem;
