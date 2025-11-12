@@ -215,12 +215,7 @@ main {
   color: var(--accent);
 }
 
-.gallery {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 1rem;
-  align-items: center;
-}
+
 
 .gallery__viewport {
   overflow: hidden;
@@ -255,10 +250,6 @@ main {
 }
 
 
-.gallery__slide[data-active="true"] {
-  display: block;
-}
-
 .gallery__slide img {
   max-width: 100%;      /* no pasa del ancho del marco */
   max-height: 10vh;     /* no pasa del 60% del alto de la ventana */
@@ -269,12 +260,6 @@ main {
 }
 
 
-
-.gallery__slide figcaption {
-  padding: 1rem;
-  font-size: 1.2rem;
-  background: rgba(0, 0, 0, 0.35);
-}
 
 .gallery__control {
   width: 3rem;
@@ -349,59 +334,55 @@ main {
     order: 1;
   }
 }
-/* === Galería ajustada a imágenes verticales tipo Instagram Story === */
+/* === GALERÍA TIPO HISTORIA VERTICAL === */
 
+.gallery {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+/* Marco tipo pantalla de celular */
 .gallery__viewport {
   overflow: hidden;
   position: relative;
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 0 30px rgba(0,0,0,0.45);
-
-  /* ancho grande y alto flexible */
-  width: 100%;
-  max-width: 800px;           /* ancho del marco */
-  margin: 0 auto;
-
-  /* marco más alto para imágenes verticales */
-  height: calc(100vh - 300px);    /* ajusta según pantalla */
-  max-height: 90vh;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: #000;
+
+  /* ancho y forma de "celular" */
+  width: 100%;
+  max-width: 420px;              /* AJUSTA ESTE VALOR si la quieres más ancha/angosta */
+  aspect-ratio: 9 / 16;          /* forma vertical tipo story */
 }
 
+/* Cada slide ocupa TODO el marco */
 .gallery__slide {
-  width: 100%;
-  height: 100%;
   display: none;
   margin: 0;
-  text-align: center;
+  width: 100%;
+  height: 100%;
 }
 
 .gallery__slide[data-active="true"] {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
-/* Imagen vertical que usa toda la altura */
+/* La imagen llena el marco vertical sin deformarse */
 .gallery__slide img {
+  width: 100%;
   height: 100%;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
+  object-fit: contain;   /* prueba cover si quieres que corte un poco pero llene más */
   display: block;
 }
 
-/* Pie de foto */
+/* Pie de foto debajo de la imagen */
 .gallery__slide figcaption {
+  padding: 0.75rem 1rem;
   font-size: 1.2rem;
-  padding: 1rem;
   text-align: center;
-  color: white;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.6);
 }
