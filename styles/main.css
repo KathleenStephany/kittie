@@ -349,23 +349,23 @@ main {
     order: 1;
   }
 }
-
-/* === Galería del diario: marco fijo y ajuste de imagen === */
+/* === Galería ajustada a imágenes verticales tipo Instagram Story === */
 
 .gallery__viewport {
   overflow: hidden;
   position: relative;
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.45);
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.45);
 
-  /* marco centrado y de buen tamaño */
+  /* ancho grande y alto flexible */
   width: 100%;
-  max-width: 960px;
-  margin-inline: auto;
+  max-width: 800px;           /* ancho del marco */
+  margin: 0 auto;
 
-  /* altura fija del “marco” */
-  height: clamp(260px, 55vh, 520px);
+  /* marco más alto para imágenes verticales */
+  height: calc(100vh - 300px);    /* ajusta según pantalla */
+  max-height: 90vh;
 
   display: flex;
   align-items: center;
@@ -374,26 +374,34 @@ main {
 }
 
 .gallery__slide {
-  margin: 0;
-  text-align: center;
   width: 100%;
   height: 100%;
   display: none;
+  margin: 0;
+  text-align: center;
 }
 
 .gallery__slide[data-active="true"] {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-/* La imagen llena el marco en altura, sin recortarse */
+/* Imagen vertical que usa toda la altura */
 .gallery__slide img {
-  height: 100%;          /* usa toda la altura del marco */
-  width: auto;           /* mantiene proporción */
-  max-width: 100%;       /* no se desborda horizontalmente */
-  object-fit: contain;   /* sin recortes */
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
   display: block;
-  margin-inline: auto;
+}
+
+/* Pie de foto */
+.gallery__slide figcaption {
+  font-size: 1.2rem;
+  padding: 1rem;
+  text-align: center;
+  color: white;
+  background: rgba(0,0,0,0.35);
 }
