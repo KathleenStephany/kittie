@@ -12,33 +12,31 @@
     />
     <link rel="stylesheet" href="styles/main.css" />
   </head>
+
   <body>
     <canvas class="scanline" aria-hidden="true"></canvas>
-    
+
+    <!-- ENCABEZADO -->
     <header class="hero" id="inicio">
       <div class="hero__content">
-        <p class="hero__tag">poesía + glitch</p>
+        <p class="hero__tag">poesía en código</p>
         <h1 class="hero__title">Kittie.exe</h1>
-        <p class="hero__subtitle">
-          Un micrositio para recorrer tus poemas entre pixeles y memoria.
-        </p>
+        <p class="hero__subtitle">Poemas en pixeles y memoria.</p>
         <nav class="hero__nav">
-          <a href="#galeria">Poesía en Imágenes</a>
+          <a href="#galeria">Poesía de Cuaderno</a>
           <a href="#poema-digital">Poema Digital</a>
           <a href="#video-poema">Video Poema</a>
           <a href="#bot">Bot Poético</a>
         </nav>
       </div>
-      <div class="hero__sprite" role="presentation" aria-hidden="true">
-        <div class="sprite sprite--glow"></div>
-      </div>
     </header>
 
+    <!-- CONTENIDO PRINCIPAL -->
     <main>
       <!-- GALERÍA -->
       <section class="panel" id="galeria">
         <div class="panel__header">
-          <h2>Poesía en Imágenes</h2>
+          <h2>Poesía de Cuaderno</h2>
           <p>
             Sube tus imágenes en la carpeta <code>assets/imagenes</code> y
             actualiza la galería para mostrar cada poema.
@@ -123,11 +121,10 @@
       </section>
     </main>
 
+    <!-- PIE DE PÁGINA -->
     <footer class="footer">
       <p>© 2024 Kittie · Poesía digital retro.</p>
-      <p>
-        Diseñado con amor por <span class="footer__highlight">tu glitch interior</span>.
-      </p>
+      <p>Diseñado con amor por <span class="footer__highlight">tu glitch interior</span>.</p>
     </footer>
 
     <script src="scripts/gallery.js"></script>
