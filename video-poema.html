@@ -1,38 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Video Poema — Kittie.exe</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video poema — Kittie.exe</title>
 
-  <link rel="stylesheet" href="/kittie/styles/main.css" />
-</head>
+    <!-- Fuentes y estilos globales -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+    <!-- reutilizamos poema.css para el tamaño grande del iframe -->
+    <link rel="stylesheet" href="assets/poema-digital/poema.css" />
+  </head>
 
-<body>
-  <canvas class="scanline"></canvas>
+  <body>
+    <canvas class="scanline" aria-hidden="true"></canvas>
 
-  <header class="hero">
-    <div class="hero__content">
-      <p class="hero__tag">&gt; video poema</p>
-      <h1 class="hero__title">Video Poema</h1>
-      <a href="/kittie/index.html" class="a--back">← Volver al inicio</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="panel">
-      <div class="panel__header">
-        <h2>Video Poema</h2>
+    <!-- ENCABEZADO -->
+    <header class="hero">
+      <div class="hero__content">
+        <p class="hero__tag">&gt; video poema</p>
+        <h1 class="hero__title">Miedos sutiles</h1>
+        <a href="index.html" class="a--back">← Volver al inicio</a>
       </div>
+    </header>
 
-      <div class="embed embed--video">
-        <iframe
-          src="https://player.vimeo.com/video/000000000"
-          allow="autoplay; fullscreen; picture-in-picture"
-        ></iframe>
-      </div>
-    </section>
-  </main>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+      <section class="panel">
+        <div class="panel__header">
+          <h2>Video Poema</h2>
+          <p>
+            Secuencia de imágenes, texto y sonido que va hilando miedos suaves
+            con la respiración de la pantalla.
+          </p>
+        </div>
 
-</body>
+        <!-- Aquí se muestra tu sketch de p5 -->
+        <div class="embed embed--video embed--poema">
+          <iframe
+            src="assets/video-poema/index.html"
+            title="Videopoema interactivo"
+            loading="lazy"
+            allow="autoplay"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="footer">
+      <p>© 2025 Kittie.exe · Poesía KSSS.</p>
+      <p>
+        Espacio interno
+        <span class="footer__highlight">Kathleen Stephany Soto Sigala</span>.
+      </p>
+    </footer>
+  </body>
 </html>
