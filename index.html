@@ -36,7 +36,6 @@
       </div>
     </header>
 
-    
     <!-- PIE DE PÁGINA -->
     <footer class="footer">
       <p>© 2025 Kittie.exe · Poesía KSSS.</p>
@@ -45,5 +44,58 @@
         <span class="footer__highlight">Kathleen Stephany Soto Sigala</span>.
       </p>
     </footer>
+
+    <!-- ========================= -->
+    <!-- SONIDOS TIPO CONSOLA 🎮 -->
+    <!-- ========================= -->
+    <script>
+      let audioCtx = null;
+
+      // Activar audio al primer click (regla de los navegadores)
+      document.addEventListener(
+        "click",
+        () => {
+          if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            console.log("AudioContext iniciado 🎧");
+          }
+        },
+        { once: true }
+      );
+
+      // Beep genérico con frecuencia (Hz) y duración (s)
+      function playBeep(freq = 440, duration = 0.15) {
+        if (!audioCtx) return;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "square";           // sonido retro
+        osc.frequency.value = freq;
+
+        const now = audioCtx.currentTime;
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + duration);
+      }
+
+      // Asignar frecuencias a los links del menú
+      document.addEventListener("DOMContentLoaded", () => {
+        // 👉 Aquí pon las frecuencias reales de tus ratones
+        const frecsRatones = [220, 247, 262, 294]; // EJEMPLO
+
+        const linksMenu = document.querySelectorAll(".hero__nav a");
+
+        linksMenu.forEach((link, i) => {
+          const freq = frecsRatones[i % frecsRatones.length];
+          link.addEventListener("click", () => playBeep(freq));
+        });
+      });
+    </script>
   </body>
 </html>
