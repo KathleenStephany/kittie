@@ -51,21 +51,14 @@
     <script>
       let audioCtx = null;
 
-      // Activar audio al primer click (regla de los navegadores)
-      document.addEventListener(
-        "click",
-        () => {
-          if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            console.log("AudioContext iniciado 🎧");
-          }
-        },
-        { once: true }
-      );
-
-      // Beep genérico con frecuencia (Hz) y duración (s)
       function playBeep(freq = 440, duration = 0.15) {
-        if (!audioCtx) return;
+        // crear / reactivar el AudioContext DENTRO del gesto de clic
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
 
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -84,16 +77,24 @@
         osc.stop(now + duration);
       }
 
-      // Asignar frecuencias a los links del menú
       document.addEventListener("DOMContentLoaded", () => {
-        // 👉 Aquí pon las frecuencias reales de tus ratones
+        // 👉 Aquí pon las frecuencias reales de tus ratones si quieres
         const frecsRatones = [220, 247, 262, 294]; // EJEMPLO
 
         const linksMenu = document.querySelectorAll(".hero__nav a");
 
         linksMenu.forEach((link, i) => {
           const freq = frecsRatones[i % frecsRatones.length];
-          link.addEventListener("click", () => playBeep(freq));
+
+          link.addEventListener("click", (e) => {
+            e.preventDefault(); // que NO cambie de página todavía
+            playBeep(freq);    // hace beep
+
+            // cambiar de página un poquito después del beep
+            setTimeout(() => {
+              window.location.href = link.href;
+            }, 180); // 180 ms, puedes subir a 250 si lo quieres más clarito
+          });
         });
       });
     </script>
