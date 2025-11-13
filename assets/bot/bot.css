@@ -1,103 +1,103 @@
-/* ===== RESET Y LAYOUT GENERAL ===== */
-html,
-body {
+/* ===== Layout base ===== */
+
+html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   color: white;
-  background: #050816;
-  /* solo bloqueamos scroll horizontal, permitimos vertical */
+  background: #000;
+  /* solo bloqueamos scroll horizontal */
   overflow-x: hidden;
   overflow-y: auto;
+  min-height: 100vh;
+  width: 100%;
 }
 
-/* Hydra: canvas de fondo ocupando la pantalla */
+/* Canvas de Hydra a pantalla completa, detrás del contenido */
 canvas {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
+  display: block;
 }
 
-/* ===== CONTENEDORES ===== */
+/* Contenedores del bot */
 
 #inicioContainer,
 #contenido {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   text-align: center;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 48px 24px 40px;
+  padding: 40px 32px;
+  max-width: 1000px;
+  margin: 0 auto 60px auto; /* deja espacio abajo para ver el botón y el footer */
   box-sizing: border-box;
 }
 
-/* Título y subtítulo (si luego agregas) */
+/* Título y nota */
+
 h2 {
-  margin: 0 0 10px;
+  color: white;
+  margin-bottom: 10px;
   font-size: 30px;
   letter-spacing: 1px;
   font-weight: 400;
-  color: #ffffff;
 }
 
 .nota {
   font-size: 16px;
   color: #ffb7d5;
-  opacity: 0.85;
-  margin-bottom: 24px;
+  opacity: 0.8;
+  margin-bottom: 30px;
   font-style: italic;
   letter-spacing: 1px;
 }
 
-/* ===== POEMA ===== */
+/* Poema generado */
 
 #output {
   font-size: 22px;
   line-height: 1.8;
-  margin-top: 32px;
+  margin-top: 40px;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
   white-space: pre-line;
   opacity: 0;
   transition: opacity 2s ease;
-  text-shadow: 0 0 10px rgba(255, 180, 210, 0.9);
+  text-shadow: 0 0 10px rgba(255, 180, 210, 0.8);
   font-weight: 300;
 }
 
-/* ===== BOTÓN ===== */
+/* Botones */
 
 button {
-  margin-top: 28px;
+  margin-top: 25px;
   padding: 12px 30px;
   background: white;
   color: black;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 15px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 0.5px;
-  transition: background 0.3s ease, transform 0.2s ease,
-    box-shadow 0.2s ease;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
   background: #ff79a6;
   color: white;
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 12px 30px rgba(255, 121, 166, 0.6);
+  transform: scale(1.05);
 }
 
-/* ===== FOOTER ===== */
+/* Footer */
 
 footer {
-  margin-top: 28px;
+  margin-top: 60px;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
   opacity: 0;
@@ -105,60 +105,19 @@ footer {
   font-weight: 300;
 }
 
-/* ===== RESPONSIVE: PANTALLAS BAJAS ===== */
+/* ===== Versión móvil ===== */
 
-@media (max-height: 750px) {
+@media (max-width: 900px) {
   #inicioContainer,
   #contenido {
-    padding-top: 32px;
-    padding-bottom: 28px;
-  }
-
-  #output {
-    font-size: 19px;
-    line-height: 1.6;
-  }
-
-  button {
-    margin-top: 20px;
-    padding: 10px 22px;
-    font-size: 14px;
-  }
-
-  footer {
-    margin-top: 20px;
-    font-size: 13px;
-  }
-}
-
-@media (max-height: 600px) {
-  #output {
-    font-size: 17px;
-  }
-
-  h2 {
-    font-size: 24px;
-  }
-
-  .nota {
-    font-size: 14px;
-  }
-}
-
-/* ===== RESPONSIVE: CELULAR (ANCHO PEQUEÑO) ===== */
-
-@media (max-width: 768px) {
-  #inicioContainer,
-  #contenido {
-    padding: 32px 16px 24px;
+    padding: 24px 16px;
   }
 
   #output {
     font-size: 18px;
   }
 
-  button {
-    width: 100%;
-    max-width: 260px;
+  h2 {
+    font-size: 24px;
   }
 }
