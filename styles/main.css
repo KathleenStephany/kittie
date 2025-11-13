@@ -43,13 +43,18 @@ canvas.scanline {
 
 /* HERO */
 .hero {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  gap: 2.2rem;
   padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 5vw, 6rem);
   position: relative;
   z-index: 1;
 }
+
 
 .hero__content {
   display: flex;

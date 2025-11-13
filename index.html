@@ -81,7 +81,29 @@
         // 👉 Aquí pon las frecuencias reales de tus ratones si quieres
         const frecsRatones = [220, 247, 262, 294]; // EJEMPLO
 
-        const linksMenu = document.querySelectorAll(".hero__nav a");
+        // Seleccionar:
+        // - los links del menú
+        // - los botones .a--back
+        // - CUALQUIER botón con clase "boton-sonido" (por si agregas más)
+        const sonidoBtns = document.querySelectorAll(
+        ".hero__nav a, .a--back, .boton-sonido"
+        );
+
+        sonidoBtns.forEach((btn, i) => {
+        const freq = frecsRatones[i % frecsRatones.length];
+
+        btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        playBeep(freq, 180);
+
+        // solo si es un enlace (no botón)
+        if (btn.href) {
+          setTimeout(() => {
+          window.location.href = btn.href;
+          }, 200);
+            }
+        });
+      });
 
         linksMenu.forEach((link, i) => {
           const freq = frecsRatones[i % frecsRatones.length];
