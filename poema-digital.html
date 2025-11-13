@@ -1,21 +1,26 @@
 <!DOCTYPE html>
+
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Maíces sonoros — Kittie.exe</title>
 
-    <!-- Fuentes y estilos globales -->
+    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
+    <link 
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Estilos globales -->
     <link rel="stylesheet" href="styles/main.css" />
-    <!-- 🔹 Estilos específicos del poema -->
+
+    <!-- Estilos específicos del poema digital -->
     <link rel="stylesheet" href="assets/poema-digital/poema.css" />
   </head>
+
 
   <body>
     <canvas class="scanline" aria-hidden="true"></canvas>
@@ -41,7 +46,7 @@
         </div>
 
         <!-- 🔹 El poema p5 dentro del panel -->
-        <div class="embed embed--video">
+        <div class="embed embed--video embed--poema">
           <iframe
             src="assets/poema-digital/index.html"
             title="Poema digital animado"
