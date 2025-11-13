@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bot Poético</title>
-    <link rel="stylesheet" href="bot.css" />
-  </head>
-  <body>
-    <div class="bot">
-      <h1>bot.exe</h1>
-      <p class="bot__intro">Haz una pregunta y responde en verso.</p>
-      <form class="bot__form" id="bot-form">
-        <label for="entrada">mensaje:</label>
-        <input
-          id="entrada"
-          name="entrada"
-          type="text"
-          placeholder="¿Qué glitch sueñas?"
-          autocomplete="off"
-          required
-        />
-        <button type="submit">enviar</button>
-      </form>
-      <div class="bot__output" id="bot-output" aria-live="polite"></div>
-    </div>
-    <script src="bot.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>KathBot — Aura Rosa</title>
+
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Estilos del bot -->
+  <link rel="stylesheet" href="bot.css">
+
+  <!-- Hydra -->
+  <script src="https://unpkg.com/hydra-synth"></script>
+
+  <!-- Lógica del bot -->
+  <script src="bot.js" defer></script>
+</head>
+<body>
+
+  <!-- 🌒 Intro -->
+  <div id="inicioContainer">
+    <h2>El juez y la casa vacía</h2>
+    <div class="nota">(lee en voz alta y respira con el bot)</div>
+    <button id="iniciarBtn">Iniciar</button>
+  </div>
+
+  <!-- 🪞 Contenido -->
+  <div id="contenido" style="display:none;">
+    <div id="output">Cargando poema...</div>
+    <button id="boton">Reescribir poema</button>
+    <footer>© 2025 KathBot — KSSS</footer>
+  </div>
+
+  <!-- 🎧 Música -->
+  <audio id="fondo" src="relajante.mp3" loop></audio>
+
+</body>
 </html>

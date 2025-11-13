@@ -1,35 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bot Poético — Kittie.exe</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Respiro contigo — Kittie.exe</title>
 
-  <link rel="stylesheet" href="/kittie/styles/main.css" />
-</head>
+    <!-- Fuentes + estilos globales -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+    <!-- reutilizamos el mismo tamaño de iframe que el poema -->
+    <link rel="stylesheet" href="assets/poema-digital/poema.css" />
+  </head>
 
-<body>
-  <canvas class="scanline"></canvas>
+  <body>
+    <canvas class="scanline" aria-hidden="true"></canvas>
 
-  <header class="hero">
-    <div class="hero__content">
-      <p class="hero__tag">&gt; bot poético</p>
-      <h1 class="hero__title">Bot Poético</h1>
-      <a href="/kittie/index.html" class="a--back">← Volver al inicio</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="panel">
-      <div class="panel__header">
-        <h2>Bot Poético</h2>
+    <header class="hero">
+      <div class="hero__content">
+        <p class="hero__tag">&gt; bot poético</p>
+        <h1 class="hero__title">Respiro contigo</h1>
+        <a href="index.html" class="a--back">← Volver al inicio</a>
       </div>
+    </header>
 
-      <div class="embed">
-        <iframe src="assets/bot/index.html"></iframe>
-      </div>
-    </section>
-  </main>
+    <main>
+      <section class="panel">
+        <div class="panel__header">
+          <h2>KathBot — Aura rosa</h2>
+          <p>
+            Un bot que respira contigo, reescribe el juicio interno
+            y deja que la voz poética habite la casa vacía.
+          </p>
+        </div>
 
-</body>
+        <!-- Aquí se incrusta el bot -->
+        <div class="embed embed--video embed--poema">
+          <iframe
+            src="assets/bot/index.html"
+            title="Bot poético — Respiro contigo"
+            loading="lazy"
+            allow="autoplay; microphone"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>© 2025 Kittie.exe · Poesía KSSS.</p>
+      <p>
+        Espacio interno
+        <span class="footer__highlight">Kathleen Stephany Soto Sigala</span>.
+      </p>
+    </footer>
+  </body>
 </html>
