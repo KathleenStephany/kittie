@@ -318,6 +318,8 @@ main {
   text-transform: uppercase;
   letter-spacing: 0.2rem;
   font-family: var(--font-main);
+  font-size: 0.7rem;   /* 🔹 mismo tamaño de fuente en TODAS */
+  text-align: center;  /* 🔹 centrado */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 

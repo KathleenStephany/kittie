@@ -20,7 +20,7 @@ function playBeep(freq = 440, durationMs = 150) {
 
   osc.type = "square"; // sonido retro
   osc.frequency.value = freq;
-  gain.gain.value = 0.2; // volumen
+  gain.gain.value = 0.2;
 
   osc.connect(gain);
   gain.connect(audioCtx.destination);
@@ -33,13 +33,10 @@ function playBeep(freq = 440, durationMs = 150) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 👉 Puedes cambiar esto por las frecuencias reales de tus ratones
+  // 👉 cámbialas luego por las frecuencias de tus ratones si quieres
   const frecsRatones = [220, 247, 262, 294, 330, 349, 392];
 
-  // Tomamos:
-  // - links del menú principal
-  // - TODOS los .a--back (volver al inicio)
-  // - cualquier cosa con clase .boton-sonido
+  // Links del menú + botones volver + cualquier boton-sonido
   const sonidoBtns = document.querySelectorAll(
     ".hero__nav a, .a--back, .boton-sonido"
   );
@@ -48,11 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const freq = frecsRatones[i % frecsRatones.length];
 
     btn.addEventListener("click", (e) => {
-      // que primero suene
       e.preventDefault();
       playBeep(freq, 180);
 
-      // decidir a dónde navega
+      // href normal o data-href si en algún momento usas <button>
       const href = btn.getAttribute("href") || btn.dataset.href;
       if (href) {
         setTimeout(() => {
@@ -62,4 +58,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
