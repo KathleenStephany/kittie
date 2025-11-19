@@ -15,24 +15,51 @@
 
   <!-- Estilos -->
   <link rel="stylesheet" href="/kittie/styles/main.css" />
-  
+
+  <style>
+    /* ESTILO DEL POEMA */
+    .poem-code {
+      font-family: "VT323", monospace;
+      font-size: 1.3rem;
+      white-space: pre-wrap;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 2rem;
+      border-radius: 12px;
+      line-height: 1.4;
+      max-height: 70vh;
+      overflow-y: auto;
+      color: #f8f9ff;
+      box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
+      width: 85%;
+      margin: auto;
+    }
+
+    .gallery__slide {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+  </style>
+
 </head>
 
 <body>
   <canvas class="scanline" aria-hidden="true"></canvas>
 
   <!-- ENCABEZADO -->
-    <header class="hero">
-       <div class="hero__content">
-        <p class="hero__tag">&gt; poesía de cuaderno</p>
-        <h1 class="hero__title">Diario visual</h1>
-        <div class="hero__nav">
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__tag">&gt; poesía de cuaderno</p>
+      <h1 class="hero__title">Diario visual</h1>
+      <div class="hero__nav">
         <a href="index.html#inicio" class="a--back boton-sonido">
           Volver al inicio
         </a>
       </div>
-      </div>
-    </header>
+    </div>
+  </header>
 
   <!-- CONTENIDO PRINCIPAL -->
   <main>
@@ -53,8 +80,45 @@
 
         <!-- Marco tipo story -->
         <div class="gallery__viewport" role="listbox" aria-live="polite">
-          <!-- 1 -->
+          
+          <!-- 1: POEMA EN TEXTO -->
           <figure class="gallery__slide" data-active="true">
+            <pre class="poem-code">
+La mantequilla del universo
+
+La mantequilla que se resbala en mis manos,
+donde los olores sensoriales tienen sabor,
+
+tan firme como la luna
+que sostiene a la galaxia andar,
+
+donde el agua cesa y llega al pétalo del árbol rojo
+de mi abuela, que algún día fue pino
+y el amor cantaba Feliz Navidad,
+
+deseosa de una mirada fija del otro lado de la pantalla,
+jamás me sentí tan real.
+
+el baño donde voltearme di tanta disposición al remolino
+blanco,
+
+arcoíris blanco, en mi cama siempre estás,
+como una neblina que aprende mi forma y respira conmigo.
+
+como mi incienso nato al andar,
+cuando en mi cuarto, con el volumen al máximo,
+el mantra de alta frecuencia me llevó a ese mismo lugar:
+
+la mantequilla del universo en mis manos,
+fija, pero sin tocar.
+
+ksss
+            </pre>
+            <figcaption>La mantequilla del universo</figcaption>
+          </figure>
+
+          <!-- 2 -->
+          <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.52.jpeg"
               alt="Poema visual 1"
@@ -62,7 +126,7 @@
             <figcaption>Poema visual 1</figcaption>
           </figure>
 
-          <!-- 2 -->
+          <!-- 3 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.52 (1).jpeg"
@@ -71,7 +135,7 @@
             <figcaption>Poema visual 2</figcaption>
           </figure>
 
-          <!-- 3 -->
+          <!-- 4 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.52 (2).jpeg"
@@ -80,7 +144,7 @@
             <figcaption>Poema visual 3</figcaption>
           </figure>
 
-          <!-- 4 -->
+          <!-- 5 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.52 (3).jpeg"
@@ -89,7 +153,7 @@
             <figcaption>Poema visual 4</figcaption>
           </figure>
 
-          <!-- 5 -->
+          <!-- 6 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53.jpeg"
@@ -98,7 +162,7 @@
             <figcaption>Poema visual 5</figcaption>
           </figure>
 
-          <!-- 6 -->
+          <!-- 7 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (1).jpeg"
@@ -107,7 +171,7 @@
             <figcaption>Poema visual 6</figcaption>
           </figure>
 
-          <!-- 7 -->
+          <!-- 8 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (2).jpeg"
@@ -116,7 +180,7 @@
             <figcaption>Poema visual 7</figcaption>
           </figure>
 
-          <!-- 8 -->
+          <!-- 9 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (3).jpeg"
@@ -125,7 +189,7 @@
             <figcaption>Poema visual 8</figcaption>
           </figure>
 
-          <!-- 9 -->
+          <!-- 10 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (4).jpeg"
@@ -134,7 +198,7 @@
             <figcaption>Poema visual 9</figcaption>
           </figure>
 
-          <!-- 10 -->
+          <!-- 11 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (5).jpeg"
@@ -143,7 +207,7 @@
             <figcaption>Poema visual 10</figcaption>
           </figure>
 
-          <!-- 11 -->
+          <!-- 12 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (6).jpeg"
@@ -152,7 +216,7 @@
             <figcaption>Poema visual 11</figcaption>
           </figure>
 
-          <!-- 12 -->
+          <!-- 13 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.54.jpeg"
@@ -161,7 +225,7 @@
             <figcaption>Poema visual 12</figcaption>
           </figure>
 
-          <!-- 13 -->
+          <!-- 14 -->
           <figure class="gallery__slide">
             <img
               src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.54 (1).jpeg"
@@ -169,6 +233,7 @@
             />
             <figcaption>Poema visual 13</figcaption>
           </figure>
+
         </div>
 
         <!-- Botón siguiente -->
