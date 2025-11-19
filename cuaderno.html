@@ -26,19 +26,14 @@
       padding: 2rem;
       border-radius: 12px;
       line-height: 1.4;
-      max-height: 70vh;
-      overflow-y: auto;
+      max-width: 900px;
+      margin: 0 auto;
+      margin-top: 2rem;
       color: #f8f9ff;
       box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
-      width: 85%;
-      margin: auto;
     }
 
-    .gallery__slide {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    .panel__header {
       text-align: center;
     }
   </style>
@@ -65,25 +60,12 @@
   <main>
     <section class="panel">
       <div class="panel__header">
-        <h2>Poesía de Cuaderno</h2>
-        <p>Desde las notas de mis días</p>
+        <h2>La mantequilla del universo</h2>
+        <p>Poema de cuaderno</p>
       </div>
 
-      <div class="gallery" role="list">
-        <!-- Botón anterior -->
-        <button
-          class="gallery__control gallery__control--prev"
-          aria-label="Poema anterior"
-        >
-          ◀
-        </button>
-
-        <!-- Marco tipo story -->
-        <div class="gallery__viewport" role="listbox" aria-live="polite">
-          
-          <!-- 1: POEMA EN TEXTO -->
-          <figure class="gallery__slide" data-active="true">
-            <pre class="poem-code">
+      <!-- POEMA ÚNICO -->
+      <pre class="poem-code">
 La mantequilla del universo
 
 La mantequilla que se resbala en mis manos,
@@ -113,142 +95,12 @@ la mantequilla del universo en mis manos,
 fija, pero sin tocar.
 
 ksss
-            </pre>
-            <figcaption>La mantequilla del universo</figcaption>
-          </figure>
+      </pre>
 
-          <!-- 2 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.52.jpeg"
-              alt="Poema visual 1"
-            />
-            <figcaption>Poema visual 1</figcaption>
-          </figure>
-
-          <!-- 3 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.52 (1).jpeg"
-              alt="Poema visual 2"
-            />
-            <figcaption>Poema visual 2</figcaption>
-          </figure>
-
-          <!-- 4 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.52 (2).jpeg"
-              alt="Poema visual 3"
-            />
-            <figcaption>Poema visual 3</figcaption>
-          </figure>
-
-          <!-- 5 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.52 (3).jpeg"
-              alt="Poema visual 4"
-            />
-            <figcaption>Poema visual 4</figcaption>
-          </figure>
-
-          <!-- 6 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53.jpeg"
-              alt="Poema visual 5"
-            />
-            <figcaption>Poema visual 5</figcaption>
-          </figure>
-
-          <!-- 7 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (1).jpeg"
-              alt="Poema visual 6"
-            />
-            <figcaption>Poema visual 6</figcaption>
-          </figure>
-
-          <!-- 8 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (2).jpeg"
-              alt="Poema visual 7"
-            />
-            <figcaption>Poema visual 7</figcaption>
-          </figure>
-
-          <!-- 9 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (3).jpeg"
-              alt="Poema visual 8"
-            />
-            <figcaption>Poema visual 8</figcaption>
-          </figure>
-
-          <!-- 10 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (4).jpeg"
-              alt="Poema visual 9"
-            />
-            <figcaption>Poema visual 9</figcaption>
-          </figure>
-
-          <!-- 11 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (5).jpeg"
-              alt="Poema visual 10"
-            />
-            <figcaption>Poema visual 10</figcaption>
-          </figure>
-
-          <!-- 12 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.53 (6).jpeg"
-              alt="Poema visual 11"
-            />
-            <figcaption>Poema visual 11</figcaption>
-          </figure>
-
-          <!-- 13 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.54.jpeg"
-              alt="Poema visual 12"
-            />
-            <figcaption>Poema visual 12</figcaption>
-          </figure>
-
-          <!-- 14 -->
-          <figure class="gallery__slide">
-            <img
-              src="assets/imagenes/WhatsApp Image 2025-11-12 at 11.49.54 (1).jpeg"
-              alt="Poema visual 13"
-            />
-            <figcaption>Poema visual 13</figcaption>
-          </figure>
-
-        </div>
-
-        <!-- Botón siguiente -->
-        <button
-          class="gallery__control gallery__control--next"
-          aria-label="Poema siguiente"
-        >
-          ▶
-        </button>
-      </div>
     </section>
   </main>
 
-  <!-- SCRIPT GALERÍA -->
-  <script src="/kittie/scripts/gallery.js"></script>
   <script src="/kittie/scripts/sonidos.js"></script>
 </body>
 </html>
+
