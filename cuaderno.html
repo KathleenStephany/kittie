@@ -1,5 +1,3 @@
-no es rodo aqui?
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,29 +13,80 @@ no es rodo aqui?
     rel="stylesheet"
   />
 
-  <!-- Estilos -->
+  <!-- Estilos globales -->
   <link rel="stylesheet" href="/kittie/styles/main.css" />
 
   <style>
     .poem-code {
-    font-family: var(--font-body);
-    font-size: 1.3rem;
-    white-space: pre-wrap;
-    background: rgba(0, 0, 0, 0.55);
-    padding: 2rem;
-    border-radius: 12px;
-    line-height: 1.4;
-    max-width: 900px;
-    margin: 2rem auto 0 auto;
+      font-family: var(--font-body);
+      font-size: 1.3rem;
+      white-space: pre-wrap;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 2rem;
+      border-radius: 12px;
+      line-height: 1.4;
+      max-width: 900px;
+      margin: 2rem auto 0 auto;
+      color: var(--accent); /* rosa neón */
+      text-shadow: 0 0 8px rgba(255, 77, 216, 0.3);
+      box-shadow:
+        0 0 18px rgba(255, 77, 216, 0.28),
+        inset 0 0 12px rgba(255, 77, 216, 0.15);
+    }
 
-    color: var(--accent); /* ← ROSA NEÓN */
-    text-shadow: 0 0 8px rgba(255, 77, 216, 0.3);
+    /* menú de botones tipo pixel */
+    .poem-menu {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
 
-    box-shadow: 0 0 18px rgba(255, 77, 216, 0.28),
-              inset 0 0 12px rgba(255, 77, 216, 0.15);  
+    .pixel-btn {
+      font-family: var(--font-main);
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      padding: 0.7rem 1.4rem;
+      border: 3px solid #000;
+      border-radius: 10px;
+      background: linear-gradient(#40d35a, #1f7c32); /* tipo barra verde */
+      color: #ffeefc;
+      text-shadow: 1px 1px #000;
+      box-shadow:
+        0 3px 0 #000,
+        0 0 0 2px #fff inset;
+      cursor: pointer;
+      transition: transform 0.05s ease, box-shadow 0.05s ease;
+    }
+
+    .pixel-btn:nth-child(2n) {
+      background: linear-gradient(#ffb74d, #c96b1a); /* naranja */
+    }
+
+    .pixel-btn:nth-child(3n) {
+      background: linear-gradient(#ff4dd8, #a31977); /* rosa */
+    }
+
+    .pixel-btn:active {
+      transform: translateY(2px);
+      box-shadow:
+        0 1px 0 #000,
+        0 0 0 2px #fff inset;
+    }
+
+    .pixel-btn--active {
+      outline: 2px solid var(--secondary);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 600px) {
+      .pixel-btn {
+        font-size: 0.55rem;
+        padding: 0.6rem 0.9rem;
+      }
     }
   </style>
-
 </head>
 
 <body>
@@ -60,12 +109,35 @@ no es rodo aqui?
   <main>
     <section class="panel">
       <div class="panel__header">
-        <h2>La mantequilla del universo</h2>
-        <p>Poema de cuaderno</p>
+        <h2 id="poem-title">La mantequilla del universo</h2>
+        <p id="poem-subtitle">Poema de cuaderno</p>
       </div>
 
-      <!-- POEMA ÚNICO -->
-      <pre class="poem-code">
+      <!-- MENÚ DE POEMAS -->
+      <div class="poem-menu">
+        <button class="pixel-btn boton-sonido" data-poem="mantequilla">
+          MANTEQUILLA
+        </button>
+        <button class="pixel-btn boton-sonido" data-poem="ilusion">
+          ILUSIÓN
+        </button>
+        <button class="pixel-btn boton-sonido" data-poem="nebuloza">
+          NEBULOZA
+        </button>
+        <button class="pixel-btn boton-sonido" data-poem="sostener">
+          SOSTENER
+        </button>
+        <button class="pixel-btn boton-sonido" data-poem="sostenerSinPerderme">
+          SOSTENER SIN PERDERME
+        </button>
+        <button class="pixel-btn boton-sonido" data-poem="noEraElDolor">
+          NO ERA EL DOLOR
+        </button>
+        <!-- aquí puedes seguir agregando más botones -->
+      </div>
+
+      <!-- POEMA -->
+      <pre class="poem-code" id="poem-content">
 La mantequilla del universo
 
 La mantequilla que se resbala en mis manos,
@@ -96,11 +168,343 @@ fija, pero sin tocar.
 
 ksss
       </pre>
-
     </section>
   </main>
+
+  <!-- SCRIPT: cambia el poema al hacer clic en cada botón -->
+  <script>
+    const poemas = {
+      mantequilla: {
+        titulo: "La mantequilla del universo",
+        subtitulo: "Poema de cuaderno",
+        texto: `La mantequilla del universo
+
+La mantequilla que se resbala en mis manos,
+donde los olores sensoriales tienen sabor,
+
+tan firme como la luna
+que sostiene a la galaxia andar,
+
+donde el agua cesa y llega al pétalo del árbol rojo
+de mi abuela, que algún día fue pino
+y el amor cantaba Feliz Navidad,
+
+deseosa de una mirada fija del otro lado de la pantalla,
+jamás me sentí tan real.
+
+el baño donde voltearme di tanta disposición al remolino
+blanco,
+
+arcoíris blanco, en mi cama siempre estás,
+como una neblina que aprende mi forma y respira conmigo.
+
+como mi incienso nato al andar,
+cuando en mi cuarto, con el volumen al máximo,
+el mantra de alta frecuencia me llevó a ese mismo lugar:
+
+la mantequilla del universo en mis manos,
+fija, pero sin tocar.
+
+ksss`
+      },
+
+      ilusion: {
+        titulo: "Me aferro a la ilusión",
+        subtitulo: "Poema de cuaderno",
+        texto: `Me aferro a la ilusión
+de una mujer que es enigma y certeza al mismo tiempo.
+Fuerte en su coraza,
+pero sutilmente vulnerable en los bordes de su alma.
+
+Una mujer solitaria,
+indispuesta a ser conquistada,
+educada en el arte de la distancia,
+con una belleza que no solo se mira,
+sino que se intuye…
+que se siente en la piel de la imaginación.
+
+Y así,
+sostengo.
+Sostengo el deseo de una historia sin final,
+sin estructura, sin promesas…
+Una historia hecha solo de miradas furtivas
+y silencios que nunca fueron diálogos concretos,
+ni nada tangible en mis manos.
+
+Este refugio que encuentro en lo inalcanzable,
+en lo imposible…
+es donde encuentro el sentido.
+
+La paradoja del amor no correspondido,
+no logrado y no consumado:
+aquello que nunca será,
+pero que en su ausencia
+me llena mucho más
+que cualquier realidad.
+
+Me aferro a la ilusión
+no porque espere que suceda,
+sino porque en ella
+todo es puro,
+intacto
+e inmortal.
+
+ksss`
+      },
+
+      nebuloza: {
+        titulo: "Nebuloza",
+        subtitulo: "Poema de cuaderno",
+        texto: `Nebuloza
+
+Nebuloza de tonos abismosos
+del cementerio de mi abuela Cuca,
+husmeando los extremos de mis oídos.
+
+Amante aire, denso, asfixiante,
+para el alvéolo insaciable de pérdida.
+
+La puerta cruje en el hueco del juicio,
+taladrante,
+por el hombre con capa blanca.
+
+Ave de tela escondida en la intemperie.
+
+Ahí estás:
+rollo de hierro
+blasfémico e ingenioso con
+inútil pertenencia.
+
+ksss`
+      },
+
+      sostener: {
+        titulo: "Sostener",
+        subtitulo: "Poema de cuaderno",
+        texto: `Sostener
+
+No podía sostener.
+A los cinco, el cráneo dolía
+como si la infancia pesara demasiado.
+“Migrañas”, decía mi madre.
+“Ay, qué delicada”, decía mi padre.
+Yo solo sabía que dolía.
+
+No podía sostener.
+Caries arregladas,
+ojos sin ver, curados.
+El cuerpo, sí – atendido.
+El alma, no – tenía que aguantar,
+porque si dolía,
+ellos cuidarían.
+
+No podía sostener.
+El amor venía con máscara,
+y el reconocimiento,
+con dieces y conducta ejemplar.
+Una niña perfecta –
+¿amada?
+Eso creía.
+
+No podía sostener.
+La adolescencia fue un disfraz mal puesto,
+una adulta prematura
+ahogando la voz de una niña
+que nunca jugó.
+
+No podía sostener.
+Fingí ser mujer,
+dolía ser adolescente,
+la niña aún encerrada
+mostraba su dolor para ser querida,
+su mente brillante para ser vista.
+Tan humana,
+tan dormida.
+
+No podía sostener.
+La niña despertó –
+por fin, alguien la vio.
+Por fin, alguien la validó.
+Y qué éxtasis ser mirada,
+aunque no por sí misma.
+Recordó entonces:
+para ser amada
+tenía que mostrarse rota,
+tenía que brillar.
+
+No podía sostener.
+Saboteo por miedo a perder,
+disfraz de quien teme sentir lo real,
+lo que jamás conoció,
+lo totalmente desconocido.
+
+¿Cómo sostener
+lo que nunca aprendió a tejer?
+
+Sostenerme,
+voy a aprender.`
+      },
+
+      sostenerSinPerderme: {
+        titulo: "Sostener sin perderme",
+        subtitulo: "Poema de cuaderno",
+        texto: `"Sostener sin perderme"
+
+El cuerpo tiembla.
+El ego se confunde.
+El juez se endurece.
+Y yo estoy aquí.
+Presente.
+Mirándolos sin correr,
+sin esconderlos,
+sin disfrazarlos.
+
+Durante mucho tiempo creí que tenía que elegir:
+apagar al juez, reprimir al ego, anestesiar al cuerpo.
+Pero ahora veo…
+No se trata de eliminar partes de mí.
+Se trata de sostenerlas.
+De hacer espacio en mí para cada voz,
+sin que ninguna tome el control.
+
+El pensamiento se agita,
+las emociones suben como mareas.
+Son las corrientes que traen la historia del cuerpo,
+la memoria del dolor,
+las creencias que formaron al ego.
+
+Y yo –como conciencia– no soy esa corriente.
+Soy quien la ve pasar.
+Soy quien se sienta en la orilla.
+Y desde esa quietud puedo decir:
+
+“Ya no están solos. Los veo. Los cuido. No tienen que gritar.”
+
+Abrazarlos no es identificarme.
+Escucharlos no es dejarme arrastrar.
+Validarlos no es someterme a ellos.
+Es honrarlos como parte del viaje…
+como mensajeros de algo más profundo.
+
+Y así, sin guerra, sin huida…
+puedo volver a casa.
+Una y otra vez.
+No porque todo esté “bien”,
+sino porque yo estoy presente.
+Presente con el temblor,
+con la rabia,
+con la culpa,
+con el deseo,
+con el cansancio…
+
+Y es ahí donde empieza lo sagrado:
+no en la perfección,
+sino en la capacidad de sostener el caos sin perderme.
+De mirar el río y saber que soy el cielo.
+De escuchar el ruido sin dejar de escucharme.
+De ser hogar incluso para mis partes rotas.
+
+Porque esa es la danza de la conciencia:
+ver, abrazar, cuidar…
+y seguir.
+No como quien escapa,
+sino como quien recuerda
+que su verdadero hogar jamás se ha ido.
+
+ksss`
+      },
+
+      noEraElDolor: {
+        titulo: "No era el dolor, era la forma",
+        subtitulo: "Poema de cuaderno",
+        texto: `No era el dolor, era la forma
+No es que tengamos que aprender desde el dolor,
+es que el ego duele cuando se rompe la forma
+en la que quiso sostener una historia.
+La caída no fue del amor,
+sino de la ilusión que lo encerraba.
+
+No era el otro quien hería,
+era el reflejo de no ser visto
+como yo esperaba ser mirada.
+Y al no caber en su mundo,
+mi mundo tambaleó.
+
+El dolor no enseñó,
+solo hizo ruido.
+Lo que enseñó fue el silencio
+que vino después,
+cuando dejé de justificar
+y comencé a mirar sin pedir ser entendida.
+
+No fue tu falta de amor,
+fue mi forma de pedirlo.
+No fue tu adicción,
+fue mi apego a la esperanza de curarte.
+No fue tu silencio,
+fue mi miedo a no ser elegida.
+
+El amor no hiere.
+Lo que hiere es el molde
+al que le pedimos que lo contenga.
+
+Hoy entiendo:
+no somos enemigos,
+solo espejos rotos queriendo armar una imagen conjunta
+sin aceptar las grietas.
+
+Y ahora que lo veo,
+no duele tu ausencia,
+sino la versión de mí
+que se creyó insuficiente al no ser amada por ti.
+
+Así, con la ventana abierta
+y la mirada limpia,
+comprendo que amar de verdad
+no necesita molde,
+ni esfuerzo para encajar,
+sino coincidir sin distorsión,
+honestamente, desde donde cada uno está.
+
+Y si no coincidimos,
+también está bien.
+Porque el amor no exige entrar en la casa del otro,
+solo sentarse juntos
+cuando ambas puertas están abiertas.
+
+ksss`
+      }
+    };
+
+    const titleEl = document.getElementById("poem-title");
+    const subtitleEl = document.getElementById("poem-subtitle");
+    const contentEl = document.getElementById("poem-content");
+    const buttons = document.querySelectorAll(".pixel-btn");
+
+    function activarBoton(btn) {
+      buttons.forEach(b => b.classList.remove("pixel-btn--active"));
+      btn.classList.add("pixel-btn--active");
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.poem;
+        const poema = poemas[key];
+        if (!poema) return;
+
+        titleEl.textContent = poema.titulo;
+        subtitleEl.textContent = poema.subtitulo;
+        contentEl.textContent = poema.texto;
+        activarBoton(btn);
+      });
+    });
+
+    // marcar el primero como activo al cargar
+    if (buttons[0]) {
+      buttons[0].classList.add("pixel-btn--active");
+    }
+  </script>
 
   <script src="/kittie/scripts/sonidos.js"></script>
 </body>
 </html>
-
