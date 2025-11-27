@@ -34,6 +34,18 @@
         inset 0 0 12px rgba(255, 77, 216, 0.15);
     }
 
+    /* letras “karaoke” */
+    .karaoke-char {
+      color: #f4e9ff;           /* casi blanco al inicio */
+      text-shadow: none;
+      transition: color 0.12s linear, text-shadow 0.12s linear;
+    }
+
+    .karaoke-char--on {
+      color: var(--accent);     /* se enciende en rosa neón */
+      text-shadow: 0 0 6px rgba(255, 77, 216, 0.75);
+    }
+
     /* menú de botones tipo pixel */
     .poem-menu {
       display: flex;
@@ -159,41 +171,11 @@
       </div>
 
       <!-- POEMA -->
-      <pre class="poem-code" id="poem-content">
-La mantequilla del universo
-
-La mantequilla que se resbala en mis manos,
-donde los olores sensoriales tienen sabor,
-
-tan firme como la luna
-que sostiene a la galaxia andar,
-
-donde el agua cesa y llega al pétalo del árbol rojo
-de mi abuela, que algún día fue pino
-y el amor cantaba Feliz Navidad,
-
-deseosa de una mirada fija del otro lado de la pantalla,
-jamás me sentí tan real.
-
-el baño donde voltearme di tanta disposición al remolino
-blanco,
-
-arcoíris blanco, en mi cama siempre estás,
-como una neblina que aprende mi forma y respira conmigo.
-
-como mi incienso nato al andar,
-cuando en mi cuarto, con el volumen al máximo,
-el mantra de alta frecuencia me llevó a ese mismo lugar:
-
-la mantequilla del universo en mis manos,
-fija, pero sin tocar.
-
-ksss
-      </pre>
+      <pre class="poem-code" id="poem-content"></pre>
     </section>
   </main>
 
-  <!-- SCRIPT: cambia el poema al hacer clic en cada botón -->
+  <!-- SCRIPT: cambia el poema y aplica efecto karaoke -->
   <script>
     const poemas = {
       mantequilla: {
@@ -868,6 +850,55 @@ ksss`
     const contentEl = document.getElementById("poem-content");
     const buttons = document.querySelectorAll(".pixel-btn");
 
+    let karaokeTimer = null;
+
+    function escaparHTML(char) {
+      if (char === "&") return "&amp;";
+      if (char === "<") return "&lt;";
+      if (char === ">") return "&gt;";
+      return char;
+    }
+
+    function mostrarPoema(key) {
+      const poema = poemas[key];
+      if (!poema) return;
+
+      titleEl.textContent = poema.titulo;
+      subtitleEl.textContent = poema.subtitulo;
+
+      // limpiar animación anterior
+      if (karaokeTimer) {
+        clearInterval(karaokeTimer);
+        karaokeTimer = null;
+      }
+
+      // convertir texto en spans por carácter
+      const texto = poema.texto;
+      let html = "";
+      for (let i = 0; i < texto.length; i++) {
+        const ch = texto[i];
+        if (ch === "\n") {
+          html += "<br>";
+        } else {
+          html += `<span class="karaoke-char">${escaparHTML(ch)}</span>`;
+        }
+      }
+      contentEl.innerHTML = html;
+
+      const chars = contentEl.querySelectorAll(".karaoke-char");
+      let idx = 0;
+
+      karaokeTimer = setInterval(() => {
+        if (idx < chars.length) {
+          chars[idx].classList.add("karaoke-char--on");
+          idx++;
+        } else {
+          clearInterval(karaokeTimer);
+          karaokeTimer = null;
+        }
+      }, 35); // velocidad del “lectorcito”
+    }
+
     function activarBoton(btn) {
       buttons.forEach(b => b.classList.remove("pixel-btn--active"));
       btn.classList.add("pixel-btn--active");
@@ -876,19 +907,15 @@ ksss`
     buttons.forEach(btn => {
       btn.addEventListener("click", () => {
         const key = btn.dataset.poem;
-        const poema = poemas[key];
-        if (!poema) return;
-
-        titleEl.textContent = poema.titulo;
-        subtitleEl.textContent = poema.subtitulo;
-        contentEl.textContent = poema.texto;
         activarBoton(btn);
+        mostrarPoema(key);
       });
     });
 
-    // marcar el primero como activo al cargar
+    // inicial: marcar primero y mostrar poema inicial
     if (buttons[0]) {
       buttons[0].classList.add("pixel-btn--active");
+      mostrarPoema(buttons[0].dataset.poem);
     }
   </script>
 
