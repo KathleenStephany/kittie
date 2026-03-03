@@ -1,209 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maíz Criollo Pixel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  background:#0a0014;
+  color:white;
+  font-family:'VT323', monospace;
+}
+
+h1{
+  text-align:center;
+  font-family:'Press Start 2P';
+  font-size:14px;
+  margin-top:25px;
+}
+
+.wrap{
+  display:flex;
+  justify-content:center;
+  margin-top:20px;
+}
+
+canvas{
+  width:90%;
+  height:540px;
+  border-radius:12px;
+  background:radial-gradient(circle at 50% 35%, rgba(255,77,216,0.18), rgba(0,0,0,0.25));
+}
+
+.btns{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin:25px 0;
+}
+
+button{
+  background:#ff4dd8;
+  border:none;
+  padding:10px 20px;
+  font-family:'Press Start 2P';
+  font-size:10px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>MAÍZ CRIOLLO // ANTOCIANINAS</h1>
+
+<div class="wrap">
+  <canvas id="maizCanvas"></canvas>
+</div>
+
+<div class="btns">
+  <button id="btnDemo">Demo</button>
+  <button id="btnRespawn">Re-sembrar</button>
+</div>
+
 <script>
-  const canvas = document.getElementById("maizCanvas");
-  const ctx = canvas.getContext("2d");
+window.addEventListener("DOMContentLoaded", () => {
 
-  function resize() {
-    // canvas real = tamaño CSS (simple)
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-  }
-  resize();
-  window.addEventListener("resize", () => {
-    resize();
-    draw();
-  });
+const canvas = document.getElementById("maizCanvas");
+const ctx = canvas.getContext("2d");
 
-  // ======== SECUENCIA (para letras A/C/G/T) ========
-  let sequence = randomDNA(9000);
-  function randomDNA(n) {
-    const b = ["A","C","G","T"];
-    let s = "";
-    for (let i = 0; i < n; i++) s += b[(Math.random() * 4) | 0];
-    return s;
-  }
+function resize(){
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+}
+resize();
+window.addEventListener("resize", resize);
 
-  // ======== SPRITE (32 x 33) ========
-  // 0 = transparente
-  // 1 = negro (contorno)
-  // 2 = verde oscuro (sombra hoja)
-  // 3 = verde claro (hoja)
-  // 4 = amarillo (grano)
-  // 5 = amarillo fuerte / naranja (sombra grano)
-  const SPRITE = [
-    "00000000000041111110000000000000",
-    "00000000000154544451100000000000",
-    "00000000000154544451100000000000",
-    "00000000001444454454410000000000",
-    "00000000115555555555551100000000",
-    "00000000115555555555551100000000",
-    "00000000115444454454451100000000",
-    "00000000014454445445455510000000",
-    "00000000014454445445455510000000",
-    "00000000014454445445455510000000",
-    "00000000015555555555555510000000",
-    "00000000015444454454455410000000",
-    "00000000015444454454455410000000",
-    "00000000015444454454455410000000",
-    "01111114444445445445554111111400",
-    "13333331555555555555551333333310",
-    "43333331555555555555551333333320",
-    "01123331445445445445551333211400",
-    "00013333111444454441133333100000",
-    "00013333333154544451133333310000",
-    "00013333333154544451133333310000",
-    "00013333333321555133333333310000",
-    "00001133333311111133333333110000",
-    "00001133333331133333333333310000",
-    "00001133333331133333333333310000",
-    "00000011111111111111111111100000",
-    "00000000000111111111000000000000",
-    "00000000000111111111000000000000",
-    "00000000000111111111000000000000",
-    "00000000000111111111000000000000",
-    "00000000000111111111000000000000",
-    "00000000000011111100000000000000",
-    "00000000000000000000000000000000"
-  ];
+let sequence = randomDNA(10000);
+let seqOffset = 0;
 
-  // Colores “exactos estilo sprite”
-  const COLORS = {
-    1: "#000000", // outline
-    2: "#5c7a2f", // verde oscuro
-    3: "#7fb047", // verde claro
-    4: "#f6d54a", // amarillo grano
-    5: "#e1aa1f"  // amarillo fuerte / sombra
-  };
+function randomDNA(n){
+  const b=["A","C","G","T"];
+  let s="";
+  for(let i=0;i<n;i++) s+=b[(Math.random()*4)|0];
+  return s;
+}
 
-  // Para que la letra se “sombrée” en relación al pixel
-  function shade(hex, amt) {
-    // amt: -60..+60 aprox
-    const h = hex.replace("#","");
-    const r = Math.max(0, Math.min(255, parseInt(h.substring(0,2),16) + amt));
-    const g = Math.max(0, Math.min(255, parseInt(h.substring(2,4),16) + amt));
-    const b = Math.max(0, Math.min(255, parseInt(h.substring(4,6),16) + amt));
-    return `rgb(${r},${g},${b})`;
-  }
+const SPRITE = [
+"00000000000041111110000000000000",
+"00000000000154544451100000000000",
+"00000000001444454454410000000000",
+"00000000115555555555551100000000",
+"00000000115444454454451100000000",
+"00000000014454445445455510000000",
+"00000000015555555555555510000000",
+"01111114444445445445554111111400",
+"13333331555555555555551333333310",
+"43333331555555555555551333333320",
+"01123331445445445445551333211400",
+"00013333333154544451133333310000",
+"00013333333321555133333333310000",
+"00001133333331133333333333310000",
+"00000011111111111111111111100000",
+"00000000000111111111000000000000",
+"00000000000111111111000000000000",
+"00000000000011111100000000000000"
+];
 
-  // Botones
-  const btnDemo = document.getElementById("btnDemo");
-  const btnRespawn = document.getElementById("btnRespawn");
+const COLORS = {
+1:"#000000",
+2:"#5c7a2f",
+3:"#7fb047",
+4:"#f6d54a",
+5:"#e1aa1f"
+};
 
-  btnDemo.addEventListener("click", () => {
-    sequence = randomDNA(9000);
-    draw();
-  });
+function shade(hex, amt){
+  const h=hex.replace("#","");
+  const r=Math.max(0,Math.min(255,parseInt(h.substring(0,2),16)+amt));
+  const g=Math.max(0,Math.min(255,parseInt(h.substring(2,4),16)+amt));
+  const b=Math.max(0,Math.min(255,parseInt(h.substring(4,6),16)+amt));
+  return `rgb(${r},${g},${b})`;
+}
 
-  btnRespawn.addEventListener("click", () => {
-    // re-sembrar = mover el offset para que cambien letras (misma secuencia)
-    seqOffset = (seqOffset + 97) % sequence.length;
-    draw();
-  });
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // Offset para variar letras
-  let seqOffset = 0;
+  const rows=SPRITE.length;
+  const cols=SPRITE[0].length;
 
-  // Hover (opcional): resalta el pixel bajo el mouse
-  let hoverCell = null;
-  canvas.addEventListener("mousemove", (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    hoverCell = { mx, my };
-  });
-  canvas.addEventListener("mouseleave", () => hoverCell = null);
+  const maxW=canvas.width*0.7;
+  const maxH=canvas.height*0.7;
 
-  function draw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cell=Math.floor(Math.min(maxW/cols,maxH/rows));
 
-    // Fondo
-    const bg = ctx.createRadialGradient(
-      canvas.width*0.5, canvas.height*0.35, 20,
-      canvas.width*0.5, canvas.height*0.35, canvas.width*0.8
-    );
-    bg.addColorStop(0, "rgba(255,77,216,0.18)");
-    bg.addColorStop(1, "rgba(0,0,0,0.25)");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0,0,canvas.width,canvas.height);
+  const startX=Math.floor((canvas.width-cols*cell)/2);
+  const startY=Math.floor((canvas.height-rows*cell)/2);
 
-    // HUD
-    ctx.save();
-    ctx.font = "14px 'Press Start 2P'";
-    ctx.fillStyle = "rgba(244,233,255,0.9)";
-    ctx.fillText("MAÍZ CRIOLLO // ANTOCIANINAS", 18, 34);
-    ctx.restore();
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.font=`${Math.floor(cell*0.85)}px VT323`;
 
-    const rows = SPRITE.length;
-    const cols = SPRITE[0].length;
+  let k=0;
 
-    // tamaño del pixel en pantalla (auto)
-    const maxW = canvas.width * 0.72;
-    const maxH = canvas.height * 0.72;
-    const cell = Math.floor(Math.min(maxW / cols, maxH / rows));
-    const startX = Math.floor((canvas.width - cols * cell) / 2);
-    const startY = Math.floor((canvas.height - rows * cell) / 2) + 10;
+  for(let y=0;y<rows;y++){
+    const row=SPRITE[y];
+    for(let x=0;x<cols;x++){
+      const code=row.charCodeAt(x)-48;
+      if(code===0) continue;
 
-    // letra centrada
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.font = `${Math.floor(cell * 0.90)}px VT323`;
+      const px=startX+x*cell;
+      const py=startY+y*cell;
 
-    let k = 0;
+      const base=COLORS[code];
 
-    // para hover: detectar celda
-    let hx = -1, hy = -1;
-    if (hoverCell) {
-      hx = Math.floor((hoverCell.mx - startX) / cell);
-      hy = Math.floor((hoverCell.my - startY) / cell);
-    }
+      ctx.fillStyle=base;
+      ctx.fillRect(px,py,cell,cell);
 
-    for (let y=0; y<rows; y++) {
-      const row = SPRITE[y];
-      for (let x=0; x<cols; x++) {
-        const code = row.charCodeAt(x) - 48; // '0'..'5'
-        if (code === 0) continue;
+      const ch=sequence[(seqOffset+k)%sequence.length];
 
-        const px = startX + x * cell;
-        const py = startY + y * cell;
+      const letterColor = (code===1) ? "rgba(240,240,255,0.85)" : shade(base,-70);
 
-        const base = COLORS[code];
+      ctx.fillStyle=letterColor;
+      ctx.fillText(ch,px+cell/2,py+cell/2);
 
-        // fondo del cuadrito
-        ctx.fillStyle = base;
-        ctx.fillRect(px, py, cell, cell);
-
-        // letra A/C/G/T
-        const ch = sequence[(seqOffset + k) % sequence.length];
-
-        // “sombra” de letra: más oscura sobre amarillo/verde; más clara sobre negro
-        const letterColor = (code === 1) ? "rgba(240,240,255,0.80)" : shade(base, -70);
-
-        // si hover, ilumina
-        const isHover = (x === hx && y === hy);
-        if (isHover) {
-          ctx.save();
-          ctx.globalAlpha = 0.22;
-          ctx.fillStyle = "#ffffff";
-          ctx.fillRect(px, py, cell, cell);
-          ctx.restore();
-          ctx.shadowColor = "rgba(255,77,216,0.65)";
-          ctx.shadowBlur = 12;
-        } else {
-          ctx.shadowColor = "rgba(0,0,0,0.25)";
-          ctx.shadowBlur = 2;
-        }
-
-        ctx.fillStyle = letterColor;
-        ctx.fillText(ch, px + cell/2, py + cell/2);
-
-        k++;
-      }
+      k++;
     }
   }
+}
 
-  // loop suave (para que el hover se vea inmediato)
-  function loop(){
-    draw();
-    requestAnimationFrame(loop);
-  }
-  loop();
+draw();
+
+document.getElementById("btnDemo").addEventListener("click",()=>{
+  sequence=randomDNA(10000);
+  draw();
+});
+
+document.getElementById("btnRespawn").addEventListener("click",()=>{
+  seqOffset=(seqOffset+97)%sequence.length;
+  draw();
+});
+
+});
 </script>
+
+</body>
+</html>
