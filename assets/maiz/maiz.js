@@ -197,7 +197,7 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.save();
     ctx.font = "16px 'Press Start 2P'";
     ctx.fillStyle = "rgba(244,233,255,0.85)";
-    ctx.fillText("MAÍZ CRIOLLO // ANTOCIANINAS", 18, 34);
+    //ctx.fillText("MAÍZ CRIOLLO // ANTOCIANINAS", 18, 34);
     ctx.restore();
 
     // “respirar” = offset suave global + micro wobble
@@ -259,7 +259,7 @@ window.addEventListener("DOMContentLoaded", () => {
         <div><b>Institución:</b> ${MAIZ_META.institute}</div>
         <div><b>Relevancia:</b> ${MAIZ_META.relevance}</div>
         <div><b>Volumen:</b> ${MAIZ_META.data_volume_gbases} Gbases (${MAIZ_META.data_volume_mbytes} MB)</div>
-        <div><b>Paleta:</b> ${paletteMode}</div>
+        <div><b>Maíz:</b> ${paletteMode}</div>
       </div>
     `;
 
