@@ -159,12 +159,13 @@ function draw(){
 
       // ===== Patrón cuadriculado del grano =====
       if (code === 4 || code === 5) {
-        const gridSize = 2; // prueba 2 o 3 según qué tan marcado lo quieras
+        const block = 2; // tamaño del bloque visual del grano
         const isDark =
-        ((x % (gridSize * 2)) < gridSize) &&
-        ((y % (gridSize * 2)) < gridSize);
+          ((x % (block * 2)) < block) &&
+          ((y % (block * 2)) < block);
+
         base = isDark ? "#e1aa1f" : "#f6d54a";
-        }
+      }
 
       // ===== Sombreado de hojas =====
       if (code === 3 || code === 2) {
