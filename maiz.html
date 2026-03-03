@@ -157,14 +157,18 @@ function draw(){
 
       let base = COLORS[code];
 
-      // ===== Patrón cuadriculado del grano =====
-      if (code === 4 || code === 5) {
-        const block = 2; // tamaño del bloque visual del grano
-        const isDark =
-          ((x % (block * 2)) < block) &&
-          ((y % (block * 2)) < block);
-
-        base = isDark ? "#e1aa1f" : "#f6d54a";
+      // ===== Grano con rejilla: líneas horizontales/verticales =====
+    if (code === 4 || code === 5) {
+      const fill = "#f6d54a";   // amarillo claro base
+      const grid = "#e1aa1f";   // amarillo fuerte (líneas)
+      // cada cuántas letras aparece línea
+      const cellSize = 3;       // prueba 3 o 4 para que se parezca al sprite
+      // grosor de línea (en “celdas”)
+      const lineW = 1;
+      // si estamos en una columna de línea o fila de línea
+      const onV = (x % cellSize) < lineW;
+      const onH = (y % cellSize) < lineW;
+      base = (onV || onH) ? grid : fill;
       }
 
       // ===== Sombreado de hojas =====
