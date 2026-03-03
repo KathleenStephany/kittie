@@ -157,10 +157,19 @@
     // 0) Metadata base del dataset (edítalo a tu gusto)
     // =========================
     const MAIZ_META = {
-      accession: "SRR35792142",
-      especie: "Zea mays",
-      pais: "México",
-      nota: "Lecturas FASTQ (SRA). Visualización artística: bases nucleicas formando mazorca."
+    project: "PRJNA1345371",
+    title: "Diversity within a Mexican maize: Olotillo",
+    objective: "Characterize the genetic diversity within a Mexican maize race.",
+    institute: "UNAM, Instituto de Biología",
+    relevance: "Agricultural",
+    scope: "Multispecies",
+    data_volume_gbases: 1,
+    data_volume_mbytes: 288,
+    grants: [
+      'PAPIIT IN222123 (DGAPA, UNAM)',
+      'CONABIO-PGM (Proyecto Global de Maíces Nativos)'
+    ],
+    note: "Hover para ver base/posición y metadata del proyecto."
     };
 
     // =========================
@@ -203,81 +212,156 @@
 
     // Silueta: una elipse (mazorca) + rejilla de puntos adentro
     function buildMaizLayout() {
-      kernels = [];
+    kernels = [];
 
-      const W = canvas.getBoundingClientRect().width;
-      const H = canvas.getBoundingClientRect().height;
+    const W = canvas.getBoundingClientRect().width;
+    const H = canvas.getBoundingClientRect().height;
 
-      // centro y tamaño de mazorca
-      const cx = W * 0.52;
-      const cy = H * 0.50;
-      const a = W * 0.20;   // radio x
-      const b = H * 0.34;   // radio y
+    // Centro de la mazorca (un poco arriba)
+    const cx = W * 0.52;
+    const cy = H * 0.48;
 
-      // densidad de letras
-      const stepX = Math.max(14, Math.floor(W / 55));  // px entre letras
-      const stepY = Math.max(18, Math.floor(H / 28));
+    // Alto/Ancho "cob"
+    const cobH = H * 0.62;     // altura mazorca
+    const cobWmax = W * 0.24;  // ancho máximo (arriba/centro)
 
-      ctx.font = "18px VT323";
-      const fontSize = 18; // para bbox aproximado
-      const charW = 10;    // VT323 ~ ancho aprox por char
+    // Densidad (más granos)
+    const stepY = Math.max(14, Math.floor(H / 38));
+    const stepX = Math.max(12, Math.floor(W / 70));
 
-      // Kernels: puntos dentro de la elipse
-      let idx = 0;
-      for (let y = cy - b; y <= cy + b; y += stepY) {
-        // ancho disponible en esta fila (elipse)
-        const dy = (y - cy) / b;
-        const rowHalf = a * Math.sqrt(Math.max(0, 1 - dy*dy));
-        const xStart = cx - rowHalf;
-        const xEnd   = cx + rowHalf;
+    ctx.font = "20px VT323";
+    const fontH = 20;
+    const charW = 11;
 
-        // “zigzag” tipo granos
-        const offset = ((Math.floor((y - (cy - b)) / stepY)) % 2) * (stepX / 2);
-
-        for (let x = xStart + offset; x <= xEnd; x += stepX) {
-          const ch = sequence[idx % sequence.length] || "A";
-
-          // meta por kernel (puedes enriquecer)
-          const meta = {
-            ...MAIZ_META,
-            base: ch,
-            pos: idx + 1,
-            // quality: (si la tienes)
-            // read: (si rastreas el read)
-          };
-
-          kernels.push({
-            x, y,
-            ch,
-            idx,
-            w: charW,
-            h: fontSize,
-            meta
-          });
-
-          idx++;
-          if (idx > 2500) break; // límite visual (evita saturar)
-        }
-        if (idx > 2500) break;
+    // Función de "taper": ancho por fila (0 arriba -> 1 abajo)
+    // Mazorca: más ancha en el tercio superior y se afila al final
+    function widthAt(t) {
+      // t: 0..1
+      // curva: ancha al inicio y se afila
+      const bulge = Math.sin(Math.PI * Math.min(1, t * 1.05)); // 0..1..0
+      const topBias = 0.75 + 0.25 * Math.cos(Math.PI * t);     // favorece arriba
+      const w = cobWmax * (0.18 + 0.82 * bulge * topBias);
+      return w;
       }
+
+    // Recorremos filas de arriba a abajo
+    const yTop = cy - cobH * 0.5;
+    const yBot = cy + cobH * 0.5;
+
+    let idx = 0;
+
+    for (let y = yTop; y <= yBot; y += stepY) {
+      const t = (y - yTop) / (yBot - yTop); // 0..1
+      const halfW = widthAt(t);
+
+      const xStart = cx - halfW;
+      const xEnd = cx + halfW;
+
+      // Zigzag para dar apariencia de granos
+      const row = Math.floor((y - yTop) / stepY);
+      const offset = (row % 2) ? (stepX * 0.5) : 0;
+
+      for (let x = xStart + offset; x <= xEnd; x += stepX) {
+        const ch = sequence[idx % sequence.length] || "A";
+
+        // El borde inferior lo hacemos más "cónico": filtramos puntos cerca de la punta
+        // Para que no quede cuadrado.
+        const tipT = Math.max(0, (t - 0.78) / 0.22); // solo en el último 22%
+        const tipShrink = 1 - tipT;                  // 1 -> 0
+        const dx = Math.abs(x - cx);
+        if (t > 0.78 && dx > halfW * tipShrink) continue;
+
+          const meta = {
+          ...MAIZ_META,
+          base: ch,
+          pos: idx + 1
+        };
+
+        kernels.push({ x, y, ch, idx, w: charW, h: fontH, meta });
+
+        idx++;
+        if (idx > 4200) break; // más letras = más “mazorca”
+      }
+      if (idx > 4200) break;
     }
+  }
 
     // =========================
     // 3) Render
     // =========================
     function drawBackground(W, H) {
-      // brillo suave
       ctx.save();
-      ctx.globalAlpha = 0.8;
       ctx.fillStyle = "rgba(0,0,0,0.10)";
-      ctx.fillRect(0,0,W,H);
+      ctx.fillRect(0, 0, W, H);
 
-      // “tallo” simple (retro)
-      ctx.globalAlpha = 0.55;
-      ctx.fillStyle = "rgba(64,211,90,0.25)";
-      ctx.fillRect(W*0.48, H*0.78, W*0.08, H*0.18);
-      ctx.restore();
-    }
+      // Parámetros base para hojas
+      const cx = W * 0.52;
+      const cy = H * 0.50;
+      const cobH = H * 0.62;
+      const cobW = W * 0.24;
+
+      // Hojas (totomoxtle) izquierda y derecha (polígonos suaves)
+      ctx.globalAlpha = 0.28;
+      ctx.fillStyle = "rgba(64,211,90,0.95)";
+
+      // Hoja izquierda
+      ctx.beginPath();
+      ctx.moveTo(cx - cobW * 0.45, cy + cobH * 0.20);
+      ctx.quadraticCurveTo(cx - cobW * 1.30, cy + cobH * 0.05, cx - cobW * 0.85, cy - cobH * 0.10);
+      ctx.quadraticCurveTo(cx - cobW * 0.35, cy - cobH * 0.22, cx - cobW * 0.10, cy - cobH * 0.10);
+      ctx.quadraticCurveTo(cx - cobW * 0.55, cy + cobH * 0.05, cx - cobW * 0.45, cy + cobH * 0.20);
+      ctx.closePath();
+      ctx.fill();
+
+      // Hoja derecha
+      ctx.beginPath();
+      ctx.moveTo(cx + cobW * 0.45, cy + cobH * 0.20);
+      ctx.quadraticCurveTo(cx + cobW * 1.30, cy + cobH * 0.05, cx + cobW * 0.85, cy - cobH * 0.10);
+      ctx.quadraticCurveTo(cx + cobW * 0.35, cy - cobH * 0.22, cx + cobW * 0.10, cy - cobH * 0.10);
+      ctx.quadraticCurveTo(cx + cobW * 0.55, cy + cobH * 0.05, cx + cobW * 0.45, cy + cobH * 0.20);
+      ctx.closePath();
+      ctx.fill();
+
+      // “Tallo” abajo
+      ctx.globalAlpha = 0.40;
+      ctx.fillRect(cx - cobW * 0.12, cy + cobH * 0.45, cobW * 0.24, cobH * 0.20);
+
+      // Contorno suave de la mazorca (ayuda a leer forma)
+      ctx.globalAlpha = 0.20;
+      ctx.strokeStyle = "rgba(255,77,216,0.65)";
+      ctx.lineWidth = 2;
+
+      // contorno tipo gota
+      ctx.beginPath();
+      const yTop = cy - cobH * 0.5;
+      const yBot = cy + cobH * 0.5;
+      for (let i = 0; i <= 70; i++) {
+        const t = i / 70;
+        const y = yTop + t * (yBot - yTop);
+
+        const bulge = Math.sin(Math.PI * Math.min(1, t * 1.05));
+        const topBias = 0.75 + 0.25 * Math.cos(Math.PI * t);
+        const halfW = cobW * (0.18 + 0.82 * bulge * topBias);
+
+        const x = cx - halfW;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      for (let i = 70; i >= 0; i--) {
+        const t = i / 70;
+        const y = yTop + t * (yBot - yTop);
+
+        const bulge = Math.sin(Math.PI * Math.min(1, t * 1.05));
+        const topBias = 0.75 + 0.25 * Math.cos(Math.PI * t);
+        const halfW = cobW * (0.18 + 0.82 * bulge * topBias);
+
+        const x = cx + halfW;
+        ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+       ctx.restore();
+      }
 
     function render() {
       const W = canvas.getBoundingClientRect().width;
@@ -356,14 +440,24 @@
       const m = k.meta;
       tooltip.innerHTML = `
         <div><b>${m.base}</b> <span style="opacity:.85">pos ${m.pos}</span></div>
-        <div style="margin-top:.35rem; opacity:.95">
-          <div><b>Accession:</b> ${m.accession}</div>
-          <div><b>Especie:</b> ${m.especie}</div>
-          <div><b>País:</b> ${m.pais}</div>
-        </div>
-        <div style="margin-top:.35rem; opacity:.8">${m.nota}</div>
-      `;
 
+        <div style="margin-top:.45rem; opacity:.95">
+          <div><b>Proyecto:</b> ${m.project}</div>
+          <div><b>Título:</b> ${m.title}</div>
+          <div><b>Institución:</b> ${m.institute}</div>
+          <div><b>Relevancia:</b> ${m.relevance}</div>
+          <div><b>Volumen:</b> ${m.data_volume_gbases} Gbases (${m.data_volume_mbytes} MB)</div>
+        </div>
+
+        <div style="margin-top:.45rem; opacity:.9">
+          <b>Grants:</b>
+          <div style="opacity:.85">• ${m.grants?.[0] || ""}</div>
+          <div style="opacity:.85">• ${m.grants?.[1] || ""}</div>
+        </div>
+
+        <div style="margin-top:.45rem; opacity:.8">${m.note || ""}</div>
+        `;
+        
       tooltip.style.display = "block";
 
       // posicionar relativo al contenedor
