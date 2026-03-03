@@ -155,7 +155,25 @@ function draw(){
       const px=startX+x*cell;
       const py=startY+y*cell;
 
-      const base=COLORS[code];
+      let base = COLORS[code];
+
+      // ===== Patrón cuadriculado del grano =====
+      if (code === 4 || code === 5) {
+        const gridSize = 2; // prueba 2 o 3 según qué tan marcado lo quieras
+        const isDark =
+        ((x % (gridSize * 2)) < gridSize) &&
+        ((y % (gridSize * 2)) < gridSize);
+        base = isDark ? "#e1aa1f" : "#f6d54a";
+        }
+
+      // ===== Sombreado de hojas =====
+      if (code === 3 || code === 2) {
+        if (x > cols / 2 && y > rows / 2) {
+        base = "#5c7a2f";  // verde oscuro
+        } else {
+        base = "#7fb047";  // verde claro
+         }
+        }
 
       ctx.fillStyle=base;
       ctx.fillRect(px,py,cell,cell);
