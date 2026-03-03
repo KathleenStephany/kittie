@@ -53,16 +53,12 @@ button{
 </style>
 </head>
 
-<body>
-
-<h1>MAÍZ CRIOLLO // ANTOCIANINAS</h1>
 
 <div class="wrap">
   <canvas id="maizCanvas"></canvas>
 </div>
 
 <div class="btns">
-  <button id="btnDemo">Demo</button>
   <button id="btnRespawn">Re-sembrar</button>
 </div>
 
@@ -245,6 +241,43 @@ document.getElementById("btnRespawn").addEventListener("click",()=>{
 
 });
 </script>
+  <body>
+    <canvas class="scanline" aria-hidden="true"></canvas>
 
-</body>
+    <!-- ENCABEZADO -->
+    <header class="hero">
+      <div class="hero__content">
+      <p class="hero__tag">&gt; poema digital</p>
+      <h1 class="hero__title">Maíces sonoros</h1>
+      <a href="index.html#inicio" class="a--back boton-sonido">
+        Volver al inicio
+      </a>
+      </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+      <section class="panel">
+        <div class="panel__header">
+          <h2>Genoma de Maíz Criollo</h2>
+          <p>
+            Cada “pixel” del maíz es un nucleótido 
+            proveniente de secuencias genómicas asociadas
+            al proyecto PRJNA1345371, que caracteriza la 
+            diversidad genética de una raza mexicana de maíz (Olotillo), 
+            desarrollado por el Instituto de Biología de la UNAM.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="footer">
+      <p>© 2025 Kittie.exe · Poesía KSSS.</p>
+      <p>
+        Espacio interno.
+        <span class="footer__highlight">Kathleen Stephany Soto Sigala</span>.
+      </p>
+    </footer>
+  </body>
 </html>
