@@ -157,18 +157,23 @@ function draw(){
 
       let base = COLORS[code];
 
-      // ===== Grano con rejilla: líneas horizontales/verticales =====
+    // ===== Grano uniforme tipo sprite (rejilla + cruces) =====
     if (code === 4 || code === 5) {
-      const fill = "#f6d54a";   // amarillo claro base
-      const grid = "#e1aa1f";   // amarillo fuerte (líneas)
-      // cada cuántas letras aparece línea
-      const cellSize = 3;       // prueba 3 o 4 para que se parezca al sprite
-      // grosor de línea (en “celdas”)
+      const fill = "#f6d54a";      // amarillo base
+      const grid = "#e1aa1f";      // líneas
+      const cross = "#d99a12";     // cruce un poquito más oscuro (opcional)
+      const cellSize = 4;          // separación uniforme (prueba 4)
       const lineW = 1;
-      // si estamos en una columna de línea o fila de línea
+
       const onV = (x % cellSize) < lineW;
       const onH = (y % cellSize) < lineW;
-      base = (onV || onH) ? grid : fill;
+
+      // “cruces” en intersecciones alternadas (para el patrón del ícono)
+      const atCross = (x % cellSize === 0) && (y % cellSize === 0) && (((x / cellSize + y / cellSize) % 2) === 0);
+
+      if (atCross) base = cross;
+      else if (onV || onH) base = grid;
+      else base = fill;
       }
 
       // ===== Sombreado de hojas =====
@@ -183,6 +188,31 @@ function draw(){
       ctx.fillStyle=base;
       ctx.fillRect(px,py,cell,cell);
 
+      // ===== Bisel en el contorno (para que no se vea dentado) =====
+      if (code === 1) {
+      const getCode = (xx, yy) => {
+        if (yy < 0 || yy >= rows || xx < 0 || xx >= cols) return 0;
+          return SPRITE[yy].charCodeAt(xx) - 48;
+        };
+
+      const n = getCode(x, y - 1);
+      const s = getCode(x, y + 1);
+      const w = getCode(x - 1, y);
+      const e = getCode(x + 1, y);
+
+      const nearColor = (c) => (c === 2 || c === 3 || c === 4 || c === 5);
+
+      // si toca color por dentro, mete un “bisel” gris oscuro
+      if (nearColor(n) || nearColor(s) || nearColor(w) || nearColor(e)) {
+        ctx.save();
+        ctx.globalAlpha = 0.35;
+        ctx.fillStyle = "rgba(255,255,255,0.15)";
+        // cuadrito interior pequeño (bisel)
+        const pad = Math.max(1, Math.floor(cell * 0.18));
+        ctx.fillRect(px + pad, py + pad, cell - pad * 2, cell - pad * 2);
+        ctx.restore();
+       }
+      }
       const ch=sequence[(seqOffset+k)%sequence.length];
 
       const letterColor = (code===1) ? "rgba(240,240,255,0.85)" : shade(base,-70);
