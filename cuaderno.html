@@ -1,381 +1,352 @@
 <script>
-  // =========================
-  // 0) Metadata base del dataset
-  // =========================
-  const MAIZ_META = {
-    project: "PRJNA1345371",
-    title: "Diversity within a Mexican maize: Olotillo",
-    objective: "Characterize the genetic diversity within a Mexican maize race.",
-    institute: "UNAM, Instituto de Biología",
-    relevance: "Agricultural",
-    scope: "Multispecies",
-    data_volume_gbases: 1,
-    data_volume_mbytes: 288,
-    grants: [
-      "PAPIIT IN222123 (DGAPA, UNAM)",
-      "CONABIO-PGM (Proyecto Global de Maíces Nativos)"
-    ],
-    note: "Hover para ver base/posición y metadata del proyecto."
-  };
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    // =========================
+    // 0) Metadata base del dataset
+    // =========================
+    const MAIZ_META = {
+      project: "PRJNA1345371",
+      title: "Diversity within a Mexican maize: Olotillo",
+      objective: "Characterize the genetic diversity within a Mexican maize race.",
+      institute: "UNAM, Instituto de Biología",
+      relevance: "Agricultural",
+      scope: "Multispecies",
+      data_volume_gbases: 1,
+      data_volume_mbytes: 288,
+      grants: [
+        "PAPIIT IN222123 (DGAPA, UNAM)",
+        "CONABIO-PGM (Proyecto Global de Maíces Nativos)"
+      ],
+      note: "Hover para ver base/posición y metadata del proyecto."
+    };
 
-  // =========================
-  // 1) Canvas setup
-  // =========================
-  const canvas = document.getElementById("maizCanvas");
-  const wrap = document.getElementById("wrap");
-  const tooltip = document.getElementById("tooltip");
-  const ctx = canvas.getContext("2d");
+    // =========================
+    // 1) Elementos
+    // =========================
+    const canvas = document.getElementById("maizCanvas");
+    const wrap = document.getElementById("wrap");
+    const tooltip = document.getElementById("tooltip");
+    const fastqInput = document.getElementById("fastqInput");
+    const btnDemo = document.getElementById("btnDemo");
+    const btnRespawn = document.getElementById("btnRespawn");
 
-  function resizeCanvasToCSS() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
-    canvas.width = Math.floor(rect.width * dpr);
-    canvas.height = Math.floor(rect.height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  // =========================
-  // 2) Estado
-  // =========================
-  let sequence = "";
-  let kernels = [];      // {x,y,size,ch,color,idx,meta}
-  let hovered = null;
-  let pinned = false;
-
-  // Tamaño del pixel (12–18 recomendado)
-  let pixel = 14;
-
-  // Paletas antocianinas
-  const PALETTES = {
-    morado: ["#7c3aed", "#6d28d9", "#a855f7", "#4c1d95"],
-    rojo:   ["#ef4444", "#dc2626", "#fb7185", "#7f1d1d"],
-    rosa:   ["#ff4dd8", "#f472b6", "#fb7185", "#a31977"],
-    mix:    ["#ff4dd8", "#ef4444", "#7c3aed", "#a855f7"]
-  };
-
-  const paletteOrder = ["mix", "morado", "rojo", "rosa"];
-  let paletteMode = "mix";
-
-  // Semilla para variar “manchas/bandas” sin cambiar secuencia
-  let colorSeed = 1;
-
-  function randomDNA(n) {
-    const b = ["A", "C", "G", "T"];
-    let s = "";
-    for (let i = 0; i < n; i++) s += b[(Math.random() * 4) | 0];
-    return s;
-  }
-
-  // =========================
-  // 3) Máscara matemática tipo pixel-art (mazorca + hojas)
-  // =========================
-  function inCob(nx, ny) {
-    // nx,ny en [-1..1]
-    const y = (ny + 1) / 2; // 0 arriba -> 1 abajo
-    const bulge = Math.sin(Math.PI * Math.min(1, y * 1.02));
-    const taper = 1 - Math.max(0, (y - 0.78) / 0.22);
-    const halfW = 0.18 + 0.62 * bulge * (0.65 + 0.35 * (1 - y));
-    const x = Math.abs(nx);
-    return x <= halfW * (0.55 + 0.45 * taper);
-  }
-
-  function inLeafLeft(nx, ny) {
-    const x = nx + 0.62;
-    const y = ny - 0.25;
-    return (x * x * 1.6 + y * y * 0.8) < 0.38 && nx < -0.25 && ny > -0.75;
-  }
-
-  function inLeafRight(nx, ny) {
-    const x = nx - 0.62;
-    const y = ny - 0.25;
-    return (x * x * 1.6 + y * y * 0.8) < 0.38 && nx > 0.25 && ny > -0.75;
-  }
-
-  // Color por “clusters” (bandas + variación con semilla)
-  function pickKernelColor(gx, gy, cobRows, isLeaf) {
-    if (isLeaf) return "rgba(120, 220, 120, 0.85)";
-
-    const pal = PALETTES[paletteMode] || PALETTES.mix;
-
-    // bandas verticales por fila
-    const band = Math.floor((gy / Math.max(1, cobRows)) * pal.length);
-
-    // jitter pseudo-aleatorio estable
-    const j = ((gx * 17 + gy * 31 + colorSeed * 101) % 7);
-    const jitter = (j < 2) ? 1 : 0;
-
-    return pal[(band + jitter) % pal.length];
-  }
-
-  // =========================
-  // 4) Construir mazorca con letras (SIN imagen)
-  // =========================
-  function buildMaizLayout() {
-    kernels = [];
-
-    const W = canvas.getBoundingClientRect().width;
-    const H = canvas.getBoundingClientRect().height;
-
-    const cols = Math.floor(W / pixel);
-    const rows = Math.floor(H / pixel);
-
-    // Área donde vive la mazorca (en “celdas”)
-    const cobCols = Math.floor(cols * 0.38);
-    const cobRows = Math.floor(rows * 0.78);
-
-    const startX = Math.floor((cols - cobCols) / 2);
-    const startY = Math.floor((rows - cobRows) / 2);
-
-    let idx = 0;
-
-    for (let gy = 0; gy < cobRows; gy++) {
-      for (let gx = 0; gx < cobCols; gx++) {
-        const nx = (gx / (cobCols - 1)) * 2 - 1;
-        const ny = (gy / (cobRows - 1)) * 2 - 1;
-
-        const isCob = inCob(nx, ny);
-        const isLeafL = inLeafLeft(nx, ny);
-        const isLeafR = inLeafRight(nx, ny);
-
-        if (!isCob && !isLeafL && !isLeafR) continue;
-
-        const x = (startX + gx) * pixel;
-        const y = (startY + gy) * pixel;
-
-        const ch = sequence[idx % sequence.length] || "A";
-        const color = pickKernelColor(gx, gy, cobRows, (isLeafL || isLeafR));
-
-        const meta = {
-          ...MAIZ_META,
-          base: ch,
-          pos: idx + 1,
-          palette: paletteMode
-        };
-
-        kernels.push({ x, y, size: pixel, ch, color, idx, meta });
-        idx++;
-      }
-    }
-  }
-
-  // =========================
-  // 5) Render pixel-art con letras
-  // =========================
-  function render() {
-    const W = canvas.getBoundingClientRect().width;
-    const H = canvas.getBoundingClientRect().height;
-
-    ctx.clearRect(0, 0, W, H);
-
-    // fondo suave retro
-    ctx.fillStyle = "rgba(0,0,0,0.10)";
-    ctx.fillRect(0, 0, W, H);
-
-    // HUD
-    ctx.save();
-    ctx.font = "16px 'Press Start 2P'";
-    ctx.fillStyle = "rgba(244,233,255,0.85)";
-    ctx.fillText("MAÍZ CRIOLLO // ANTOCIANINAS", 18, 34);
-    ctx.restore();
-
-    // letras tipo pixel
-    ctx.save();
-    ctx.font = `${Math.floor(pixel * 1.05)}px VT323`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    for (const k of kernels) {
-      const isHover = hovered && hovered.idx === k.idx;
-
-      // bloque sutil para look “pixel”
-      ctx.globalAlpha = 0.18;
-      ctx.fillStyle = k.color;
-      ctx.fillRect(k.x, k.y, k.size, k.size);
-
-      // letra encima
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = isHover ? "#ffffff" : k.color;
-
-      if (isHover) {
-        ctx.shadowColor = k.color;
-        ctx.shadowBlur = 14;
-      } else {
-        ctx.shadowColor = "rgba(255,77,216,0.12)";
-        ctx.shadowBlur = 2;
-      }
-
-      ctx.fillText(k.ch, k.x + k.size / 2, k.y + k.size / 2);
-    }
-
-    ctx.restore();
-  }
-
-  // =========================
-  // 6) Hover + tooltip
-  // =========================
-  function getMousePos(evt) {
-    const rect = canvas.getBoundingClientRect();
-    return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
-  }
-
-  function hitTest(mx, my) {
-    for (let i = kernels.length - 1; i >= 0; i--) {
-      const k = kernels[i];
-      if (mx >= k.x && mx <= k.x + k.size && my >= k.y && my <= k.y + k.size) return k;
-    }
-    return null;
-  }
-
-  function showTooltip(k, evt) {
-    const m = k.meta;
-    tooltip.innerHTML = `
-      <div><b>${m.base}</b> <span style="opacity:.85">pos ${m.pos}</span></div>
-
-      <div style="margin-top:.45rem; opacity:.95">
-        <div><b>Proyecto:</b> ${m.project}</div>
-        <div><b>Título:</b> ${m.title}</div>
-        <div><b>Institución:</b> ${m.institute}</div>
-        <div><b>Relevancia:</b> ${m.relevance}</div>
-        <div><b>Volumen:</b> ${m.data_volume_gbases} Gbases (${m.data_volume_mbytes} MB)</div>
-        <div><b>Paleta:</b> ${m.palette}</div>
-      </div>
-
-      <div style="margin-top:.45rem; opacity:.9">
-        <b>Grants:</b>
-        <div style="opacity:.85">• ${m.grants?.[0] || ""}</div>
-        <div style="opacity:.85">• ${m.grants?.[1] || ""}</div>
-      </div>
-
-      <div style="margin-top:.45rem; opacity:.8">${m.note || ""}</div>
-    `;
-
-    tooltip.style.display = "block";
-
-    const wrapRect = wrap.getBoundingClientRect();
-    tooltip.style.left = (evt.clientX - wrapRect.left) + "px";
-    tooltip.style.top = (evt.clientY - wrapRect.top) + "px";
-  }
-
-  function hideTooltip() {
-    tooltip.style.display = "none";
-  }
-
-  canvas.addEventListener("mousemove", (evt) => {
-    if (pinned) {
-      const wrapRect = wrap.getBoundingClientRect();
-      tooltip.style.left = (evt.clientX - wrapRect.left) + "px";
-      tooltip.style.top = (evt.clientY - wrapRect.top) + "px";
+    if (!canvas || !wrap || !tooltip || !fastqInput || !btnDemo || !btnRespawn) {
+      document.body.innerHTML = `
+        <pre style="padding:16px;font-family:monospace">
+ERROR: Falta un elemento por id.
+Necesito: #maizCanvas #wrap #tooltip #fastqInput #btnDemo #btnRespawn
+Revisa que esos ids existan en tu HTML.
+        </pre>`;
       return;
     }
 
-    const { x, y } = getMousePos(evt);
-    hovered = hitTest(x, y);
-    render();
+    const ctx = canvas.getContext("2d");
 
-    if (hovered) showTooltip(hovered, evt);
-    else hideTooltip();
-  });
-
-  canvas.addEventListener("mouseleave", () => {
-    if (!pinned) hideTooltip();
-    hovered = null;
-    render();
-  });
-
-  canvas.addEventListener("click", (evt) => {
-    if (!hovered) return;
-    pinned = !pinned;
-    if (pinned) showTooltip(hovered, evt);
-    else hideTooltip();
-  });
-
-  // =========================
-  // 7) Anim loop
-  // =========================
-  function loop() {
-    render();
-    requestAnimationFrame(loop);
-  }
-
-  // =========================
-  // 8) FASTQ loader (lee un chunk)
-  // =========================
-  function parseFastqFirstN(text, maxReads = 200, maxBases = 6000) {
-    const lines = text.split(/\r?\n/);
-    let seq = "";
-    let reads = 0;
-
-    for (let i = 0; i + 3 < lines.length; i += 4) {
-      const s = (lines[i + 1] || "").trim();
-      if (!s) continue;
-      seq += s;
-      reads++;
-      if (reads >= maxReads) break;
-      if (seq.length >= maxBases) break;
+    function resizeCanvasToCSS() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    seq = seq.toUpperCase().replace(/[^ACGT]/g, "");
-    if (seq.length < 100) seq = randomDNA(6000);
-    return seq.slice(0, maxBases);
-  }
+    // =========================
+    // 2) Estado
+    // =========================
+    let sequence = "";
+    let kernels = [];
+    let hovered = null;
+    let pinned = false;
 
-  const fastqInput = document.getElementById("fastqInput");
-  fastqInput.addEventListener("change", async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    let pixel = 14;
 
-    const chunk = file.slice(0, 2_000_000); // 2MB
-    const text = await chunk.text();
+    const PALETTES = {
+      morado: ["#7c3aed", "#6d28d9", "#a855f7", "#4c1d95"],
+      rojo:   ["#ef4444", "#dc2626", "#fb7185", "#7f1d1d"],
+      rosa:   ["#ff4dd8", "#f472b6", "#fb7185", "#a31977"],
+      mix:    ["#ff4dd8", "#ef4444", "#7c3aed", "#a855f7"]
+    };
 
-    sequence = parseFastqFirstN(text, 250, 8000);
-    resizeCanvasToCSS();
-    buildMaizLayout();
-    pinned = false;
-    hideTooltip();
-    hovered = null;
-  });
+    const paletteOrder = ["mix", "morado", "rojo", "rosa"];
+    let paletteMode = "mix";
+    let colorSeed = 1;
 
-  // =========================
-  // 9) Botones
-  // =========================
-  document.getElementById("btnDemo").addEventListener("click", () => {
+    function randomDNA(n) {
+      const b = ["A","C","G","T"];
+      let s = "";
+      for (let i=0;i<n;i++) s += b[(Math.random()*4)|0];
+      return s;
+    }
+
+    // =========================
+    // 3) Máscara pixel (solo con letras)
+    // =========================
+    function inCob(nx, ny) {
+      const y = (ny + 1) / 2;
+      const bulge = Math.sin(Math.PI * Math.min(1, y * 1.02));
+      const taper = 1 - Math.max(0, (y - 0.78) / 0.22);
+      const halfW = 0.18 + 0.62 * bulge * (0.65 + 0.35 * (1 - y));
+      return Math.abs(nx) <= halfW * (0.55 + 0.45 * taper);
+    }
+
+    function inLeafLeft(nx, ny) {
+      const x = nx + 0.62;
+      const y = ny - 0.25;
+      return (x*x*1.6 + y*y*0.8) < 0.38 && nx < -0.25 && ny > -0.75;
+    }
+
+    function inLeafRight(nx, ny) {
+      const x = nx - 0.62;
+      const y = ny - 0.25;
+      return (x*x*1.6 + y*y*0.8) < 0.38 && nx > 0.25 && ny > -0.75;
+    }
+
+    function pickKernelColor(gx, gy, cobRows, isLeaf) {
+      if (isLeaf) return "rgba(120,220,120,0.85)";
+      const pal = PALETTES[paletteMode] || PALETTES.mix;
+      const band = Math.floor((gy / Math.max(1, cobRows)) * pal.length);
+      const j = ((gx*17 + gy*31 + colorSeed*101) % 7);
+      const jitter = (j < 2) ? 1 : 0;
+      return pal[(band + jitter) % pal.length];
+    }
+
+    function buildMaizLayout() {
+      kernels = [];
+
+      const W = canvas.getBoundingClientRect().width;
+      const H = canvas.getBoundingClientRect().height;
+
+      const cols = Math.floor(W / pixel);
+      const rows = Math.floor(H / pixel);
+
+      const cobCols = Math.floor(cols * 0.38);
+      const cobRows = Math.floor(rows * 0.78);
+
+      const startX = Math.floor((cols - cobCols) / 2);
+      const startY = Math.floor((rows - cobRows) / 2);
+
+      let idx = 0;
+
+      for (let gy=0; gy<cobRows; gy++) {
+        for (let gx=0; gx<cobCols; gx++) {
+          const nx = (gx / (cobCols - 1)) * 2 - 1;
+          const ny = (gy / (cobRows - 1)) * 2 - 1;
+
+          const isCob = inCob(nx, ny);
+          const isLeafL = inLeafLeft(nx, ny);
+          const isLeafR = inLeafRight(nx, ny);
+          if (!isCob && !isLeafL && !isLeafR) continue;
+
+          const x = (startX + gx) * pixel;
+          const y = (startY + gy) * pixel;
+
+          const ch = sequence[idx % sequence.length] || "A";
+          const color = pickKernelColor(gx, gy, cobRows, (isLeafL || isLeafR));
+
+          const meta = { ...MAIZ_META, base: ch, pos: idx + 1, palette: paletteMode };
+          kernels.push({ x, y, size: pixel, ch, color, idx, meta });
+
+          idx++;
+        }
+      }
+    }
+
+    function render() {
+      const W = canvas.getBoundingClientRect().width;
+      const H = canvas.getBoundingClientRect().height;
+
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle = "rgba(0,0,0,0.10)";
+      ctx.fillRect(0,0,W,H);
+
+      ctx.save();
+      ctx.font = "16px 'Press Start 2P'";
+      ctx.fillStyle = "rgba(244,233,255,0.85)";
+      ctx.fillText("MAÍZ CRIOLLO // ANTOCIANINAS", 18, 34);
+      ctx.restore();
+
+      ctx.save();
+      ctx.font = `${Math.floor(pixel * 1.05)}px VT323`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      for (const k of kernels) {
+        const isHover = hovered && hovered.idx === k.idx;
+
+        ctx.globalAlpha = 0.18;
+        ctx.fillStyle = k.color;
+        ctx.fillRect(k.x, k.y, k.size, k.size);
+
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = isHover ? "#ffffff" : k.color;
+
+        ctx.shadowColor = isHover ? k.color : "rgba(255,77,216,0.12)";
+        ctx.shadowBlur = isHover ? 14 : 2;
+
+        ctx.fillText(k.ch, k.x + k.size/2, k.y + k.size/2);
+      }
+
+      ctx.restore();
+    }
+
+    function getMousePos(evt) {
+      const rect = canvas.getBoundingClientRect();
+      return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+    }
+
+    function hitTest(mx, my) {
+      for (let i=kernels.length-1; i>=0; i--) {
+        const k = kernels[i];
+        if (mx>=k.x && mx<=k.x+k.size && my>=k.y && my<=k.y+k.size) return k;
+      }
+      return null;
+    }
+
+    function showTooltip(k, evt) {
+      const m = k.meta;
+      tooltip.innerHTML = `
+        <div><b>${m.base}</b> <span style="opacity:.85">pos ${m.pos}</span></div>
+        <div style="margin-top:.45rem; opacity:.95">
+          <div><b>Proyecto:</b> ${m.project}</div>
+          <div><b>Título:</b> ${m.title}</div>
+          <div><b>Institución:</b> ${m.institute}</div>
+          <div><b>Relevancia:</b> ${m.relevance}</div>
+          <div><b>Volumen:</b> ${m.data_volume_gbases} Gbases (${m.data_volume_mbytes} MB)</div>
+          <div><b>Paleta:</b> ${m.palette}</div>
+        </div>
+        <div style="margin-top:.45rem; opacity:.9">
+          <b>Grants:</b>
+          <div style="opacity:.85">• ${m.grants?.[0] || ""}</div>
+          <div style="opacity:.85">• ${m.grants?.[1] || ""}</div>
+        </div>
+        <div style="margin-top:.45rem; opacity:.8">${m.note || ""}</div>
+      `;
+      tooltip.style.display = "block";
+      const wrapRect = wrap.getBoundingClientRect();
+      tooltip.style.left = (evt.clientX - wrapRect.left) + "px";
+      tooltip.style.top  = (evt.clientY - wrapRect.top) + "px";
+    }
+
+    function hideTooltip() { tooltip.style.display = "none"; }
+
+    canvas.addEventListener("mousemove", (evt) => {
+      if (pinned) {
+        const wrapRect = wrap.getBoundingClientRect();
+        tooltip.style.left = (evt.clientX - wrapRect.left) + "px";
+        tooltip.style.top  = (evt.clientY - wrapRect.top) + "px";
+        return;
+      }
+      const {x,y} = getMousePos(evt);
+      hovered = hitTest(x,y);
+      render();
+      if (hovered) showTooltip(hovered, evt);
+      else hideTooltip();
+    });
+
+    canvas.addEventListener("mouseleave", () => {
+      if (!pinned) hideTooltip();
+      hovered = null;
+      render();
+    });
+
+    canvas.addEventListener("click", (evt) => {
+      if (!hovered) return;
+      pinned = !pinned;
+      if (pinned) showTooltip(hovered, evt);
+      else hideTooltip();
+    });
+
+    canvas.addEventListener("dblclick", () => {
+      const i = paletteOrder.indexOf(paletteMode);
+      paletteMode = paletteOrder[(i + 1) % paletteOrder.length];
+      colorSeed++;
+      buildMaizLayout();
+      pinned = false;
+      hideTooltip();
+      hovered = null;
+      render();
+    });
+
+    // FASTQ
+    function parseFastqFirstN(text, maxReads=200, maxBases=8000) {
+      const lines = text.split(/\r?\n/);
+      let seq = "";
+      let reads = 0;
+
+      for (let i=0; i+3<lines.length; i+=4) {
+        const s = (lines[i+1] || "").trim();
+        if (!s) continue;
+        seq += s;
+        reads++;
+        if (reads >= maxReads) break;
+        if (seq.length >= maxBases) break;
+      }
+
+      seq = seq.toUpperCase().replace(/[^ACGT]/g, "");
+      if (seq.length < 100) seq = randomDNA(maxBases);
+      return seq.slice(0, maxBases);
+    }
+
+    fastqInput.addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const chunk = file.slice(0, 2_000_000);
+      const text = await chunk.text();
+
+      sequence = parseFastqFirstN(text, 250, 8000);
+      resizeCanvasToCSS();
+      buildMaizLayout();
+      pinned = false;
+      hideTooltip();
+      hovered = null;
+      render();
+    });
+
+    btnDemo.addEventListener("click", () => {
+      sequence = randomDNA(8000);
+      resizeCanvasToCSS();
+      buildMaizLayout();
+      pinned = false;
+      hideTooltip();
+      hovered = null;
+      render();
+    });
+
+    btnRespawn.addEventListener("click", () => {
+      if (!sequence) sequence = randomDNA(8000);
+      colorSeed++;
+      buildMaizLayout();
+      pinned = false;
+      hideTooltip();
+      hovered = null;
+      render();
+    });
+
+    // init
     sequence = randomDNA(8000);
     resizeCanvasToCSS();
     buildMaizLayout();
-    pinned = false;
-    hideTooltip();
-    hovered = null;
-  });
+    render();
 
-  document.getElementById("btnRespawn").addEventListener("click", () => {
-    // cambia el patrón de color sin cambiar secuencia
-    colorSeed++;
-    buildMaizLayout();
-    pinned = false;
-    hideTooltip();
-    hovered = null;
-  });
+    window.addEventListener("resize", () => {
+      resizeCanvasToCSS();
+      buildMaizLayout();
+      render();
+    });
 
-  // Extra: doble click sobre el canvas rota la paleta (mix -> morado -> rojo -> rosa)
-  canvas.addEventListener("dblclick", () => {
-    const i = paletteOrder.indexOf(paletteMode);
-    paletteMode = paletteOrder[(i + 1) % paletteOrder.length];
-    colorSeed++;
-    buildMaizLayout();
-    pinned = false;
-    hideTooltip();
-    hovered = null;
-  });
+    // Loop opcional (si lo quieres animado)
+    function loop() {
+      render();
+      requestAnimationFrame(loop);
+    }
+    loop();
 
-  // =========================
-  // init
-  // =========================
-  sequence = randomDNA(8000);
-  resizeCanvasToCSS();
-  buildMaizLayout();
-  window.addEventListener("resize", () => {
-    resizeCanvasToCSS();
-    buildMaizLayout();
-  });
-  loop();
+  } catch (err) {
+    document.body.innerHTML = `
+      <pre style="padding:16px;font-family:monospace;white-space:pre-wrap">
+JS ERROR:
+${String(err && err.stack ? err.stack : err)}
+      </pre>`;
+  }
+});
 </script>
